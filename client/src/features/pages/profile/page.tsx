@@ -13,13 +13,36 @@ const ProfilePage = () => {
       'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
   };
 
-  const transaction = {
-    item: 'wallpapers',
-    date: 'Saturday, 14 Juli 2021',
-    price: 'Rp.500.000',
-    subTotal: '500.000',
-    image: 'https://wallpapercave.com/uwp/uwp4532001.jpeg',
-  };
+  const transactions = [
+    {
+      item: 'wallpapers',
+      date: 'Saturday, 14 Juli 2021',
+      price: 'Rp.500.000',
+      subTotal: '500.000',
+      image: 'https://wallpapercave.com/uwp/uwp4532001.jpeg',
+    },
+    {
+      item: 'wallpapers',
+      date: 'Saturday, 14 Juli 2021',
+      price: 'Rp.500.000',
+      subTotal: '500.000',
+      image: 'https://wallpapercave.com/uwp/uwp4532001.jpeg',
+    },
+    {
+      item: 'wallpapers',
+      date: 'Saturday, 14 Juli 2021',
+      price: 'Rp.500.000',
+      subTotal: '500.000',
+      image: 'https://wallpapercave.com/uwp/uwp4532001.jpeg',
+    },
+    {
+      item: 'wallpapers',
+      date: 'Saturday, 14 Juli 2021',
+      price: 'Rp.500.000',
+      subTotal: '500.000',
+      image: 'https://wallpapercave.com/uwp/uwp4532001.jpeg',
+    },
+  ];
 
   return (
     <div className="bg-black text-white min-h-screen p-8">
@@ -66,9 +89,21 @@ const ProfilePage = () => {
         </div>
 
         {/* Transaction Section */}
-        <div className="space-y-4 sm:hidden lg:block w-[65%]">
-          <h2 className="text-2xl text-red-500 font-black">My Transaction</h2>
-          <TransactionCard transaction={transaction} />
+        <div className="space-y-4 relative w-[65%] h-[420px] overflow-hidden">
+          <div className="sticky top-0 bg-black z-10">
+            <h2 className="text-2xl text-red-500 font-black">My Transaction</h2>
+          </div>
+          <div className="overflow-auto h-[calc(100%-40px)]">
+            {/* Adjust height to account for the header */}
+            <div className="flex flex-col space-y-2">
+              {transactions.map((transaction, index) => (
+                <TransactionCard
+                  key={index}
+                  transaction={transaction}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>

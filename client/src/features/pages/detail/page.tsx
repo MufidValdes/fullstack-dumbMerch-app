@@ -1,8 +1,17 @@
 import { Header } from '@/components/layout/header';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Transaction } from '@/types/product';
+import { transactions } from '@/features/pages/market/page';
+import { useParams } from 'react-router-dom';
 
 export default function DetailPage() {
+  const { id } = useParams<{ id: string }>();
+  const product: Transaction | undefined = transactions.find(
+    (item) => item.id === Number(id)
+  );
+  if (!product) return <div>Product not found</div>;
+
   return (
     <div className="bg-black text-white min-h-screen p-8">
       {/* Header */}
@@ -15,40 +24,33 @@ export default function DetailPage() {
             {/* Product Image */}
             <Card className="w-full max-w-[300px] max-h-[450px] bg-[#212121] border-none">
               <img
-                src="https://wallpapercave.com/wp/wp13357407.jpg" // Replace with the actual image
-                alt="Product"
-                className="rounded-lg w-full h-full object-cover"
+                src={product.photo}
+                alt={product.product_name}
+                className="rounded-lg w-full h-[450px] object-cover"
               />
             </Card>
 
             {/* Product Details */}
             <div className="flex flex-col justify-between w-full max-w-[500px] space-y-2">
-              <h2 className="text-2xl text-red-500 font-black">Mouse</h2>
-              <p>Stock: 600</p>
+              <h2 className="text-2xl text-red-500 font-black">
+                {product.product_name}
+              </h2>
+              <p>Stock: {product.qty}</p>
 
               {/* Product Specifications */}
               <ul className="list-disc pl-5 space-y-1">
-                <li>Wireless Mouse</li>
-                <li>Konektivitas wireless 2.4 GHz</li>
-                <li>Jarak wireless hingga 10 m</li>
-                <li>Plug and Play</li>
-                <li>Baterai tahan hingga 12 bulan</li>
+                <li>{product.product_desc} specification 1</li>
+                <li>{product.product_desc} specification 2</li>
               </ul>
 
               {/* Product Description */}
               <p className="text-gray-400">
-                Mouse Wireless Alytech AL - Y5D, hadir dengan desain 3 tombol
-                mouse yang ringan dan mudah dibawa. Mouse ini menggunakan
-                frekuensi radio 2.4GHz (bekerja hingga jarak 10m) dan fitur
-                sensor canggih optik pelacakan dengan penerima USB yang kecil.
-                Mouse ini didukung oleh 1x baterai AA (hingga 12 bulan hidup
-                baterai). Mendukung sistem operasi Windows 7,8, 10 keatas, Mac
-                OS X 10.8 atau yang lebih baru dan sistem operasi Chrome OS.
+                This is a description of {product.product_desc}.
               </p>
 
               {/* Price */}
               <div className="text-2xl font-bold text-red-500 flex justify-end">
-                Rp.300.900
+                {product.price}
               </div>
 
               {/* Buy Button */}

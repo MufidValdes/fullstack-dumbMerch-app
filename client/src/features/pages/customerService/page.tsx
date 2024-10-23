@@ -1,5 +1,6 @@
 import { Header } from '@/components/layout/header';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@radix-ui/react-separator';
 
 const users = {
   avatar: 'https://wallpapercave.com/wp/wp13357573.jpg',
@@ -9,6 +10,10 @@ export default function CustomerServicePage() {
     <div className="bg-black min-h-screen p-8 overflow-hidden">
       {/* Header */}
       <Header />
+      <Separator
+        orientation="horizontal"
+        className="bg-[#6A6A6A]/30 h-1"
+      />
 
       <div className="flex">
         {/* Left Side: Chat List */}
