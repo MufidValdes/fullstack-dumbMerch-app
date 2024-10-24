@@ -26,7 +26,7 @@ const ProductTable = ({ products }: ProductTableProps) => (
         <TableHead className="text-right">Action</TableHead>
       </TableRow>
     </TableHeader>
-    <TableBody>
+    <TableBody className="overflow-x-auto">
       {products.map((product, index) => (
         <ProductRow
           key={product.id}

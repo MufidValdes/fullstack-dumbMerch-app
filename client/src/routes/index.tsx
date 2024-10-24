@@ -5,6 +5,7 @@ import ProductPage from '@/features/pages/Product/page';
 import CategoryEditPage from '@/features/pages/category/EditPage';
 import CategoryPage from '@/features/pages/category/page';
 import CustomerServicePage from '@/features/pages/customerService/page';
+import Dashboard from '@/features/pages/dashboard/page';
 import DetailPage from '@/features/pages/detail/page';
 import MarketPage from '@/features/pages/market/page';
 import ProfilePage from '@/features/pages/profile/page';
@@ -50,6 +51,10 @@ export function AppRouter() {
     {
       path: '/product/:id',
       element: <ProductEditPage />,
+    },
+    {
+      path: '/dashboard',
+      element: <Dashboard />,
     },
   ]);
   return <RouterProvider router={router} />;

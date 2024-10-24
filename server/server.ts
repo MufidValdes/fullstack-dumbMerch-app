@@ -1,4 +1,4 @@
-import app from './src/app';
+import app from '@src/app';
 // Load environment variables
 require('dotenv').config();
 

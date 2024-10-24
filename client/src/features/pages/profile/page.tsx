@@ -50,17 +50,17 @@ const ProfilePage = () => {
       <Header />
 
       {/* Profile Section */}
-      <div className="flex w-[100%] justify-between">
+      <div className=" lg:flex w-[100%] justify-between">
         {/* Profile Information */}
         <div className="space-y-4">
           <h2 className="text-2xl text-red-500 font-black">My Profile</h2>
-          <div className="flex gap-10 ml-4">
+          <div className="sm:flex gap-4 ml-4">
             {/* Profile Details */}
-            <Card className="w-[338px] h-[420px]">
+            <Card className="w-auto sm:w-[400px] lg:w-[400px] h-[420px]">
               <img
                 src="https://wallpapercave.com/wp/wp13357407.jpg"
                 alt="Profile"
-                className="rounded-lg w-[338px] h-full object-cover "
+                className="rounded-lg w-full h-full object-cover "
               />
             </Card>
             <div className="space-y-2 text-balance">
@@ -89,11 +89,11 @@ const ProfilePage = () => {
         </div>
 
         {/* Transaction Section */}
-        <div className="space-y-4 relative w-[65%] h-[420px] overflow-hidden">
+        <div className="space-y-4 relative w-full md:w-[800px] m-4 h-[420px] overflow-hidden">
           <div className="sticky top-0 bg-black z-10">
             <h2 className="text-2xl text-red-500 font-black">My Transaction</h2>
           </div>
-          <div className="overflow-auto h-[calc(100%-40px)]">
+          <div className="overflow-y-auto h-[calc(100%-50px)]">
             {/* Adjust height to account for the header */}
             <div className="flex flex-col space-y-2">
               {transactions.map((transaction, index) => (

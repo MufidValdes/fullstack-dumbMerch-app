@@ -1,15 +1,15 @@
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 
 export const TransactionCard = ({ transaction }: { transaction: any }) => (
-  <Card className="flex bg-[#303030] border-none p-4 w-[480px] h-[120px] justify-between items-center">
-    <div className="flex">
+  <Card className="flex bg-[#303030] border-none p-4 w-[500px] h-[100px]">
+    <div className="flex justify-between items-center">
       <img
         src={transaction.image}
         alt={transaction.item}
-        className="rounded w-[80px] h-[110px] m-auto object-cover"
+        className="rounded w-[80px] h-[100px] object-cover"
       />
-      <CardContent className="h-full my-2">
-        <div className="mt-2">
+      <CardContent className="flex h-full gap-4">
+        <div className="">
           <h3 className="text-red-500 text-lg font-black">
             {transaction.item}
           </h3>
@@ -20,12 +20,13 @@ export const TransactionCard = ({ transaction }: { transaction: any }) => (
           Sub Total: {transaction.subTotal}
         </div>
       </CardContent>
+      <CardFooter>
+        <img
+          src="./src/assets/images/logo-dumbmerch.png"
+          alt="Dumb Merch"
+          className="object-contain h-[50px]"
+        />
+      </CardFooter>
     </div>
-
-    <img
-      src="./src/assets/images/logo-dumbmerch.png"
-      alt="Dumb Merch"
-      className="object-contain h-[50px]"
-    />
   </Card>
 );

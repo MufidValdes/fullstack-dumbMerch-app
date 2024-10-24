@@ -22,7 +22,7 @@ const CategoriesTable = ({ Categories }: CategoriesTableProps) => (
         <TableHead className="text-right">Action</TableHead>
       </TableRow>
     </TableHeader>
-    <TableBody>
+    <TableBody className="overflow-x-auto">
       {Categories.map((Category, index) => (
         <CategoryRow
           key={Category.id}
