@@ -14,4 +14,5 @@ process.on('SIGINT', async () => {
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
+  console.log(`Swagger Docs available on http://localhost:${port}/api-docs`);
 });

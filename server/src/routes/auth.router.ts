@@ -5,7 +5,7 @@ const Authrouter = Router();
 
 /**
  * @Route POST api/auth/login
- * @Desc login with username and password
+ * @Desc login with email and password
  */
 Authrouter.post('/login', authController.login);
 
@@ -19,7 +19,6 @@ Authrouter.post('/register', authController.register);
  * @Route api/auth/check
  * @Desc verification user account
  */
-Authrouter.get('/check', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
-});
+Authrouter.get('/check', authController.authcheck);
+
 export default Authrouter;

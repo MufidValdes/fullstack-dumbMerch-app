@@ -1,10 +1,12 @@
 import { RegisterDTO } from '@dto/auth.dto';
 import prisma from '@utils/prisma.client';
 
-export const cretaeUser = async (IRegister: RegisterDTO) => {
+export const createUser = async (IRegister: RegisterDTO) => {
   return prisma.users.create({
     data: {
-      ...IRegister,
+      email: IRegister.email,
+      password: IRegister.password,
+      username: IRegister.username,
       profile: {
         create: {
           fullname: IRegister.fullname,

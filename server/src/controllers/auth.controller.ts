@@ -4,6 +4,16 @@ import * as authService from '@services/auth.service';
 import { deleteOldTokens } from '@repositories/token';
 
 export async function register(req: Request, res: Response) {
+  // #swagger.tags = ['AUTH']
+  /**
+   #swagger.parameters['body'] = {
+     in: 'body',
+     description: 'add new user',
+     schema: {
+       $ref: '#/definitions/Register'
+     }
+   }
+  */
   try {
     const bodyRegister: RegisterDTO = req.body;
     console.log(bodyRegister);
@@ -16,6 +26,16 @@ export async function register(req: Request, res: Response) {
 }
 
 export async function login(req: Request, res: Response) {
+  // #swagger.tags = ['AUTH']
+  /**
+   #swagger.parameters['body'] = {
+     in: 'body',
+     description: 'login with email and password',
+     schema: {
+       $ref: '#/definitions/Login'
+     }
+   }
+  */
   try {
     const bodyLogin: LoginDTO = req.body;
     console.log(bodyLogin);
@@ -26,6 +46,15 @@ export async function login(req: Request, res: Response) {
   }
 }
 
+export async function authcheck(req: Request, res: Response) {
+  try {
+    const user = res.locals.user;
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+}
 export async function logout(req: Request, res: Response) {
   try {
     const userId = (req as any).user.id;

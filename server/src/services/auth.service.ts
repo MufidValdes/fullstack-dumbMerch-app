@@ -10,7 +10,7 @@ export const register = async (IRegister: RegisterDTO) => {
     throw new Error(`User ${IRegister.email} already exists`);
   }
   const generateUsername = IRegister.email.split('@')[0];
-  const createUser = await userRepository.cretaeUser({
+  const createUser = await userRepository.createUser({
     ...IRegister,
     username: generateUsername,
     password: await hashPassword(IRegister.password),
