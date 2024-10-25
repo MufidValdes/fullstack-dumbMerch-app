@@ -1,4 +1,5 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
+import Authrouter from '@routes/auth.router';
 
 const app: Express = express();
 
@@ -8,7 +9,6 @@ app.use(express.urlencoded({ extended: true }));
 // =================================================================
 // ROUTES
 // =================================================================
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
-});
+app.use('/api/auth', Authrouter);
+
 export default app;
