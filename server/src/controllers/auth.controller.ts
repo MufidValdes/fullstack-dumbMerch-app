@@ -47,17 +47,19 @@ export async function login(req: Request, res: Response) {
 }
 
 export async function authcheck(req: Request, res: Response) {
+  // #swagger.tags = ['AUTH']
   try {
-    const user = res.locals.user;
+    const userId = res.locals.user.id;
 
-    res.json(user);
+    res.json(userId);
   } catch (error) {
     res.status(500).json(error);
   }
 }
 export async function logout(req: Request, res: Response) {
+  // #swagger.tags = ['AUTH']
   try {
-    const userId = (req as any).user.id;
+    const userId = res.locals.user.id;
     await deleteOldTokens(userId);
     return res.status(200).json({ message: 'Successfully logged out' });
   } catch (error) {
