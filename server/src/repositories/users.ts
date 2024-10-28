@@ -30,3 +30,7 @@ export const findUsernameOrEmail = async (usernameOrEmail: string) => {
     },
   });
 };
+// {admin only}
+// getallusers
+// deleteuser
+// updateuser
