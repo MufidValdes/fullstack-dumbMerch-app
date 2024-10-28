@@ -1,5 +1,6 @@
 import * as authController from '@controllers/auth.controller';
-import { Router, Request, Response } from 'express';
+import { authentication } from '@src/middlewares/auth.middleware';
+import { Router } from 'express';
 
 const Authrouter = Router();
 
@@ -19,6 +20,6 @@ Authrouter.post('/register', authController.register);
  * @Route api/auth/check
  * @Desc verification user account
  */
-Authrouter.get('/check', authController.authcheck);
+Authrouter.get('/check', authentication, authController.authcheck);
 
 export default Authrouter;
