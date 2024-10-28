@@ -1,12 +1,34 @@
 import { Button } from '@/components/ui/button';
 import { AuthForm } from '../authFormLayout';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { RegisterAsync } from '@/app/stores/auth/async'; // Adjust the import based on your structure
+import { useForm } from 'react-hook-form';
+import { useAppDispatch } from '@/app/stores/auth/authStore';
+import toast from 'react-hot-toast';
+
+interface FormData {
+  fullname: string;
+  email: string;
+  password: string;
+}
 
 export default function RegisterPage() {
-  const handleRegisterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Handle register logic here
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  const handleRegisterSubmit = async (data: FormData) => {
+    const res = await dispatch(RegisterAsync(data));
+    if (RegisterAsync.fulfilled.match(res)) {
+      toast.success('Registration successfully');
+      navigate('/login');
+    }
   };
+
   return (
     <div className="flex items-center justify-between w-screen h-screen bg-black">
       {/* Left Section */}
@@ -40,7 +62,7 @@ export default function RegisterPage() {
 
           <Button
             variant="ghost"
-            className=" text-gray-400"
+            className="text-gray-400"
           >
             Register
           </Button>
@@ -51,12 +73,31 @@ export default function RegisterPage() {
       <AuthForm
         title="Register"
         inputs={[
-          { type: 'text', placeholder: 'Name' },
-          { type: 'email', placeholder: 'Email' },
-          { type: 'password', placeholder: 'Password' },
+          {
+            type: 'text',
+            placeholder: 'fullname',
+            name: 'fullname',
+            register,
+            required: true,
+          },
+          {
+            type: 'email',
+            placeholder: 'Email',
+            name: 'email',
+            register,
+            required: true,
+          },
+          {
+            type: 'password',
+            placeholder: 'Password',
+            name: 'password',
+            register,
+            required: true,
+          },
         ]}
         buttonText="Register"
-        onSubmit={handleRegisterSubmit}
+        onSubmit={handleSubmit(handleRegisterSubmit)}
+        errors={errors}
       />
     </div>
   );

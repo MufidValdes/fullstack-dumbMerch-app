@@ -3,9 +3,16 @@ import { Input } from '@/components/ui/input';
 
 interface AuthFormProps {
   title: string;
-  inputs: { type: string; placeholder: string }[];
+  inputs: {
+    type: string;
+    placeholder: string;
+    name: string;
+    register: any;
+    required?: boolean;
+  }[];
   buttonText: string;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  errors: Record<string, any>;
 }
 
 export const AuthForm: React.FC<AuthFormProps> = ({
@@ -13,6 +20,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({
   inputs,
   buttonText,
   onSubmit,
+  errors,
 }) => {
   return (
     <div className="w-[416px] p-10 mr-24 bg-[#181818] rounded-lg">
@@ -22,12 +30,17 @@ export const AuthForm: React.FC<AuthFormProps> = ({
         onSubmit={onSubmit}
       >
         {inputs.map((input, index) => (
-          <Input
-            key={index}
-            type={input.type}
-            placeholder={input.placeholder}
-            className="bg-[#D2D2D2]/25 border-gray-600 text-gray-300"
-          />
+          <div key={index}>
+            <Input
+              type={input.type}
+              placeholder={input.placeholder}
+              {...input.register(input.name, { required: input.required })}
+              className="bg-[#D2D2D2]/25 border-gray-600 text-gray-300"
+            />
+            {errors[input.name] && (
+              <span className="text-red-500">{`${input.placeholder} is required`}</span>
+            )}
+          </div>
         ))}
         <Button
           variant="secondary"

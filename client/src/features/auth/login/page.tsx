@@ -1,12 +1,31 @@
 import { Button } from '@/components/ui/button';
 import { AuthForm } from '../authFormLayout';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { LoginAsync } from '@/app/stores/auth/async'; // Adjust import based on your structure
+import { useAppDispatch } from '@/app/stores/auth/authStore';
+
+interface LoginData {
+  email: string;
+  password: string;
+}
 
 export default function LoginPage() {
-  const handleLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Handle login logic here
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginData>();
+
+  const handleLoginSubmit = async (data: LoginData) => {
+    const res = await dispatch(LoginAsync(data));
+    if (LoginAsync.fulfilled.match(res)) {
+      navigate('/');
+    }
   };
+
   return (
     <div className="flex items-center justify-between w-screen h-screen bg-black">
       {/* Left Section */}
@@ -27,7 +46,7 @@ export default function LoginPage() {
           <span className="font-extrabold text-white">Indonesia</span>.
         </p>
 
-        {/* Login and Login Buttons */}
+        {/* Login and Register Buttons */}
         <div className="flex mt-8 gap-4">
           <Button
             variant="secondary"
@@ -38,7 +57,7 @@ export default function LoginPage() {
           <Link to={'/register'}>
             <Button
               variant="ghost"
-              className=" text-gray-400"
+              className="text-gray-400"
             >
               Register
             </Button>
@@ -50,11 +69,24 @@ export default function LoginPage() {
       <AuthForm
         title="Login"
         inputs={[
-          { type: 'email', placeholder: 'Email' },
-          { type: 'password', placeholder: 'Password' },
+          {
+            type: 'email',
+            placeholder: 'Email',
+            name: 'email',
+            register,
+            required: true,
+          },
+          {
+            type: 'password',
+            placeholder: 'Password',
+            name: 'password',
+            register,
+            required: true,
+          },
         ]}
         buttonText="Login"
-        onSubmit={handleLoginSubmit}
+        onSubmit={handleSubmit(handleLoginSubmit)}
+        errors={errors}
       />
     </div>
   );
