@@ -27,21 +27,16 @@ export const login = async (ILogin: LoginDTO) => {
   if (!isValidPassword) {
     throw new Error('Invalid email or password');
   }
-  const token = jwt.sign(
-    {
-      id: user.id,
-      email: user.email,
-      username: user.username,
-      role: user.role,
-    },
-    process.env.JWT_SECRET || 'SECRET_KEY',
-    {
-      expiresIn: '1d',
-    }
-  );
+  const { password, ...userToSign } = user;
+  const token = jwt.sign(userToSign, process.env.JWT_SECRET || 'SECRET_KEY', {
+    expiresIn: '1d',
+  });
   // Hapus token lama dan simpan token baru
   await deleteOldTokens(user.id);
   await saveToken(user.id, token);
 
-  return token;
+  return {
+    user: userToSign,
+    token: token,
+  };
 };
