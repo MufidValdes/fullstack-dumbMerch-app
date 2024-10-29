@@ -2,6 +2,7 @@ import { LoginDTO, RegisterDTO } from '@dto/auth.dto';
 import { Request, Response } from 'express';
 import * as authService from '@services/auth.service';
 import { deleteOldTokens } from '@repositories/token';
+import prisma from '@src/utils/prisma.client';
 
 export async function register(req: Request, res: Response) {
   // #swagger.tags = ['AUTH']
@@ -50,8 +51,16 @@ export async function authcheck(req: Request, res: Response) {
   // #swagger.tags = ['AUTH']
   try {
     const userId = res.locals.user.id;
-
-    res.json(userId);
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        role: true,
+      },
+    });
+    res.json(user);
   } catch (error) {
     res.status(500).json(error);
   }

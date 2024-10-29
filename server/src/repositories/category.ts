@@ -10,7 +10,13 @@ export const createCategory = async (data: CategoryDTO) => {
 
 // Mendapatkan semua kategori
 export const getAllCategories = async () => {
-  return prisma.categories.findMany();
+  return prisma.categories.findMany({
+    orderBy: [
+      {
+        id: 'asc',
+      },
+    ],
+  });
 };
 
 // Mendapatkan kategori berdasarkan ID

@@ -36,7 +36,7 @@ export async function authentication(
 
     // Masukkan informasi user ke request
     res.locals.user = decoded;
-    console.log(res.locals.user);
+    // console.log(res.locals.user);
     next();
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {
