@@ -3,6 +3,7 @@ export interface Iuser {
   username: string;
   email: string;
   profile: IUserProfile;
+  role: 'USER' | 'ADMIN';
 }
 
 export interface IUserProfile {

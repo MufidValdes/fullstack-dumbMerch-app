@@ -1,9 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { AuthForm } from '../authFormLayout';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { LoginAsync } from '@/app/stores/auth/async'; // Adjust import based on your structure
-import { useAppDispatch } from '@/app/stores/auth/authStore';
+import { useAppDispatch, useAppSelector } from '@/app/stores/stores';
 
 interface LoginData {
   email: string;
@@ -26,6 +26,23 @@ export default function LoginPage() {
     }
   };
 
+  const user = useAppSelector((state) => state.auth.user);
+  if (user?.role === 'USER') {
+    return (
+      <Navigate
+        to="/"
+        replace
+      />
+    );
+  }
+  if (user?.role === 'ADMIN') {
+    return (
+      <Navigate
+        to="/dashboard"
+        replace
+      />
+    );
+  }
   return (
     <div className="flex items-center justify-between w-screen h-screen bg-black">
       {/* Left Section */}

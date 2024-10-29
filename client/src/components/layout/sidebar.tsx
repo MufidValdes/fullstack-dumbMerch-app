@@ -32,7 +32,7 @@ function Sidebar({ icons, avatarSrc }: SidebarProps) {
             to={item.routelink}
             className={({ isActive }) =>
               isActive
-                ? 'bg-gray-700 p-2 rounded-full'
+                ? 'bg-red-500 p-2 rounded-full'
                 : 'p-2 rounded-full hover:bg-gray-700'
             }
           >

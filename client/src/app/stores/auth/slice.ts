@@ -12,7 +12,7 @@ const initialstate: AuthState = {
   user: undefined,
   loading: false,
 };
-const authSlince = createSlice({
+const authSlice = createSlice({
   name: 'auth',
   initialState: initialstate,
   reducers: {
@@ -47,7 +47,7 @@ const authSlince = createSlice({
     builder
       .addCase(checkAuth.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload?.user;
+        state.user = action.payload.user;
       })
       .addCase(checkAuth.pending, (state) => {
         state.loading = true;
@@ -58,4 +58,4 @@ const authSlince = createSlice({
   },
 });
 
-export default authSlince.reducer;
+export default authSlice.reducer;

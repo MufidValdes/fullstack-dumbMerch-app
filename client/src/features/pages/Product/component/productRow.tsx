@@ -26,7 +26,7 @@ const ProductRow: React.FC<ProductProps> = ({ product, index }) => {
       <TableCell>{product.product_desc}</TableCell>
       <TableCell>{product.price}</TableCell>
       <TableCell>{product.qty}</TableCell>
-      <TableCell className="text-right space-x-2">
+      <TableCell className="text-right space-x-2 flex">
         <Link to={`/product/${product.id}`}>
           <Button className="bg-green-500 text-white">Edit</Button>
         </Link>

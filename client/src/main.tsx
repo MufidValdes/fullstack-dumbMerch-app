@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import { Provider } from 'react-redux';
-import { store } from './app/stores/auth/authStore';
+import { store } from './app/stores/stores.ts';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -36,7 +36,7 @@ const statusRows = [
     statusColor: 'green',
   },
 ];
-const NavIcons: Array<LinkItemProps> = [
+export const NavIcons: Array<LinkItemProps> = [
   { icon: FaHome, routelink: '/dashboard' },
   { icon: TbMessageReportFilled, routelink: '/complain' },
   { icon: TbCategoryPlus, routelink: '/category' },
@@ -104,6 +104,18 @@ export default function Dashboard() {
 
           {/* Stats Cards */}
           <div className="grid grid-cols-2 gap-4">
+            <StatsCard
+              title="Spend"
+              value="$123,456"
+              icon={FaCartPlus}
+              bgColor="bg-[#E6D7D0]"
+            />
+            <StatsCard
+              title="Supplier"
+              value="12"
+              icon={TbCategoryPlus}
+              bgColor="bg-[#FFA07A]"
+            />
             <StatsCard
               title="Spend"
               value="$123,456"

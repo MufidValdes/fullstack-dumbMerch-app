@@ -3,8 +3,8 @@ import { AuthForm } from '../authFormLayout';
 import { Link, useNavigate } from 'react-router-dom';
 import { RegisterAsync } from '@/app/stores/auth/async'; // Adjust the import based on your structure
 import { useForm } from 'react-hook-form';
-import { useAppDispatch } from '@/app/stores/auth/authStore';
 import toast from 'react-hot-toast';
+import { useAppDispatch } from '@/app/stores/stores';
 
 interface FormData {
   fullname: string;

@@ -10,7 +10,7 @@ function Navbar() {
           alt="Logo"
           className="w-[40px] h-[40px] object-contain"
         />
-        <h1 className="text-3xl font-bold">DumbMerch</h1>
+        <h1 className="text-2xl font-bold text-wrap">DumbMerch</h1>
       </div>
       <div className="flex items-center space-x-4 bg-black p-4 rounded-full">
         <Button
