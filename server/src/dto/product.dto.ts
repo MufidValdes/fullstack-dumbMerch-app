@@ -6,8 +6,12 @@ export interface ProductDTO {
   price: Decimal;
   stock: number;
   categoryId: number;
+  images: ProductImageDTO[];
 }
 
+export interface ProductImageDTO {
+  imageUrl: string;
+}
 export interface UpdateProductDTO {
   product_name?: string;
   description?: string;

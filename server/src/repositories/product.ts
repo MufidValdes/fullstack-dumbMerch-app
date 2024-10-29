@@ -7,8 +7,14 @@ import prisma from '@utils/prisma.client';
 
 // Membuat kategori baru
 export const createProduct = async (data: ProductDTO) => {
+  const { images, stock, categoryId, ...dataProduct } = data;
+
   return prisma.products.create({
-    data,
+    data: {
+      ...dataProduct,
+      stock: +stock,
+      categoryId: +categoryId,
+    },
   });
 };
 

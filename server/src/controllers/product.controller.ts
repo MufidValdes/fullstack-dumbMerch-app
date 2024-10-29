@@ -7,6 +7,7 @@ import {
   ProductDTO,
   UpdateProductDTO,
 } from '@src/dto/product.dto';
+import { uploadImage } from '@src/utils/cloudinary';
 
 export const getProductById = async (req: Request, res: Response) => {
   try {
@@ -43,9 +44,20 @@ export const createProduct = async (req: Request, res: Response) => {
   */
   try {
     const bodyproduct: ProductDTO = req.body;
+    console.log(bodyproduct);
+
+    const imageFiles = req.files as Express.Multer.File[];
+    console.log('img', imageFiles);
+    if (req.files) {
+      bodyproduct.images = await uploadImage(
+        req.files as Express.Multer.File[]
+      );
+    }
     const product = await productService.createProduct(bodyproduct);
-    res.json(product);
+    res.status(201).json(product);
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({ message: 'Error creating product', error });
   }
 };
