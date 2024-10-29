@@ -66,10 +66,379 @@
     },
     "/api/auth/check": {
       "get": {
+        "tags": [
+          "AUTH"
+        ],
         "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/categories/": {
+      "post": {
+        "tags": [
+          "Category"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "description": "Retrieve all categories",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/categories/{id}": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Category"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Category"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/orders/": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "description": "Create a new order",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Order details",
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "description": "get user details",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/orders/{orderId}": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "description": "Retrieve an order by ID",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Order ID",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/reviews/": {
+      "post": {
+        "tags": [
+          "REVIEW"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "*": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/reviews/{productId}": {
+      "get": {
+        "tags": [
+          "REVIEW"
+        ],
+        "description": "Retrieve all reviews for a specific product",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/profile/": {
+      "get": {
+        "tags": [
+          "PROFILE"
+        ],
+        "description": "Retrieve profile information for the logged-in user",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "PROFILE"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
@@ -84,15 +453,15 @@
       "properties": {
         "fullname": {
           "type": "string",
-          "example": "John Doe"
+          "example": "Antonio Gaming"
         },
         "username": {
           "type": "string",
-          "example": "johndoe"
+          "example": "antonio"
         },
         "email": {
           "type": "string",
-          "example": "johndoe@example.com"
+          "example": "antonio@example.com"
         },
         "password": {
           "type": "string",
@@ -105,13 +474,105 @@
       "properties": {
         "email": {
           "type": "string",
-          "example": "johndoe@example.com"
+          "example": "antonio@example.com"
         },
         "password": {
           "type": "string",
           "example": "Password123"
         }
       }
+    },
+    "ProfileUpdate": {
+      "type": "object",
+      "properties": {
+        "fullname": {
+          "type": "string",
+          "example": "antonio Gaming"
+        },
+        "phone": {
+          "type": "string",
+          "example": "+123 456789"
+        },
+        "address": {
+          "type": "string",
+          "example": "Bintaro"
+        },
+        "gender": {
+          "type": "string",
+          "example": "MALE"
+        },
+        "avatar": {
+          "type": "string",
+          "example": "https://wallpapercave.com/wp/wp13357495.jpg"
+        }
+      }
+    },
+    "Category": {
+      "type": "object",
+      "properties": {
+        "category_name": {
+          "type": "string",
+          "example": "Electronics"
+        }
+      }
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "product_name": {
+          "type": "string",
+          "example": "Smartphone"
+        },
+        "description": {
+          "type": "string",
+          "example": "A high-end smartphone with 128GB storage"
+        },
+        "prince": {
+          "type": "number",
+          "example": 522.99
+        },
+        "stock": {
+          "type": "number",
+          "example": 50
+        },
+        "categoryId": {
+          "type": "number",
+          "example": 1
+        }
+      }
+    },
+    "Order": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "number",
+          "example": 1
+        },
+        "orderItems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "productId": {
+                "type": "number",
+                "example": 1
+              },
+              "quantity": {
+                "type": "number",
+                "example": 2
+              },
+              "price": {
+                "type": "number",
+                "example": 522.99
+              }
+            }
+          }
+        }
+      }
+    },
+    "totalAmount": {
+      "type": "number",
+      "example": 1399.98
     }
   }
 }
