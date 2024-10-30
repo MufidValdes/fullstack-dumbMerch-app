@@ -1,13 +1,14 @@
 import {
   CreateReviewDTO,
   ProductDTO,
+  ProductImageDTO,
   UpdateProductDTO,
 } from '@src/dto/product.dto';
 import prisma from '@utils/prisma.client';
 
 // Membuat kategori baru
 export const createProduct = async (data: ProductDTO) => {
-  const { images, stock, categoryId, ...dataProduct } = data;
+  const { images, reviews, stock, categoryId, ...dataProduct } = data;
 
   return prisma.products.create({
     data: {
@@ -18,10 +19,23 @@ export const createProduct = async (data: ProductDTO) => {
   });
 };
 
+export const createProductImages = async (
+  images: ProductImageDTO[],
+  id: number
+) => {
+  return prisma.productImages.createMany({
+    data: images.map((image) => ({
+      imageUrl: image.imageUrl,
+      productId: id,
+    })),
+  });
+};
+
 // Mendapatkan semua kategori
 export const getAllproducts = async () => {
   return prisma.products.findMany({
     include: {
+      images: true,
       reviews: true,
       category: true,
     },
@@ -39,15 +53,22 @@ export const getProductById = async (id: number) => {
   });
 };
 
-export async function updateProduct(productId: number, data: UpdateProductDTO) {
-  return await prisma.products.update({
-    where: {
-      id: productId,
-    },
-    data,
-  });
-}
+export const updateProduct = async (
+  productId: number,
+  data: UpdateProductDTO
+) => {
+  const { images, reviews, category, ...dataProduct } = data;
 
+  // Cari gambar produk lama di database
+  const existingImages = await prisma.productImages.findMany({
+    where: { productId },
+  });
+
+  return prisma.products.update({
+    where: { id: productId },
+    data: dataProduct,
+  });
+};
 export async function deleteProduct(productId: number) {
   return await prisma.products.delete({
     where: { id: productId },
@@ -64,5 +85,35 @@ export async function getProductReviews(productId: number) {
   return await prisma.reviews.findMany({
     where: { productId },
     include: { user: true },
+  });
+}
+
+export async function searchProduct(
+  query: string,
+  sortby: string,
+  orderBy: string
+) {
+  return await prisma.products.findMany({
+    where: {
+      OR: [
+        {
+          product_name: {
+            contains: query,
+            mode: 'insensitive',
+          },
+        },
+        {
+          description: {
+            contains: query,
+            mode: 'insensitive',
+          },
+        },
+      ],
+    },
+    orderBy: { [sortby]: orderBy },
+    include: {
+      images: true,
+      category: true,
+    },
   });
 }

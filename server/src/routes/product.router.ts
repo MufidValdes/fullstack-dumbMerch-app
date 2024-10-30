@@ -13,7 +13,12 @@ ProductRouter.post(
   upload.array('images', 3),
   productController.createProduct
 );
-ProductRouter.put('/:id', authentication, productController.updateProduct);
+ProductRouter.put(
+  '/:id',
+  authentication,
+  upload.array('images', 3),
+  productController.updateProduct
+);
 ProductRouter.delete('/:id', authentication, productController.deleteProduct);
 
 ProductRouter.post('/:id/review', authentication, productController.addReview);

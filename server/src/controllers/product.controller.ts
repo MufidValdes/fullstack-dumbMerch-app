@@ -49,9 +49,7 @@ export const createProduct = async (req: Request, res: Response) => {
     const imageFiles = req.files as Express.Multer.File[];
     console.log('img', imageFiles);
     if (req.files) {
-      bodyproduct.images = await uploadImage(
-        req.files as Express.Multer.File[]
-      );
+      bodyproduct.images = await uploadImage(imageFiles);
     }
     const product = await productService.createProduct(bodyproduct);
     res.status(201).json(product);
@@ -66,9 +64,17 @@ export async function updateProduct(req: Request, res: Response) {
   try {
     const productId = +req.params.id;
     const data: UpdateProductDTO = req.body;
+    const imageFiles = req.files as Express.Multer.File[];
+
+    // Jika ada file gambar baru yang diunggah, upload ke Cloudinary
+    if (imageFiles) {
+      const uploadedImages = await uploadImage(imageFiles);
+      data.images = [...(data.images || []), ...uploadedImages];
+    }
     const updatedProduct = await productService.updateProduct(productId, data);
     res.status(200).json(updatedProduct);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'error updated Product' });
   }
 }
@@ -102,5 +108,18 @@ export async function getProductReviews(req: Request, res: Response) {
     res
       .status(500)
       .json({ message: 'error getting product review', error: error });
+  }
+}
+
+export async function searchProduct(req: Request, res: Response) {
+  try {
+    const querry = req.query.querry as string;
+    const sortby = req.query.sortby as string;
+    const order = req.query.order as 'asc' | 'desc';
+    const product = await productService.search(querry, sortby, order);
+    res.json(product);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Error Search Product', error });
   }
 }

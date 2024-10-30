@@ -14,11 +14,33 @@ export const getAllproducts = async () => {
 };
 
 export const createProduct = async (data: ProductDTO) => {
-  return productRepository.createProduct(data);
+  const product = productRepository.createProduct(data);
+  console.log((await product).id);
+  if (data.images) {
+    await productRepository.createProductImages(
+      data.images,
+      (
+        await product
+      ).id
+    );
+  }
+  console.log(product);
+  return product;
 };
 
 export async function updateProduct(productId: number, data: UpdateProductDTO) {
-  return productRepository.updateProduct(productId, data);
+  const product = productRepository.updateProduct(productId, data);
+  console.log((await product).id);
+  if (data.images) {
+    await productRepository.createProductImages(
+      data.images,
+      (
+        await product
+      ).id
+    );
+  }
+  console.log(product);
+  return product;
 }
 
 export async function deleteProduct(productId: number) {
@@ -31,4 +53,8 @@ export async function addReview(data: CreateReviewDTO) {
 
 export async function getProductReviews(productId: number) {
   return productRepository.getProductReviews(productId);
+}
+
+export async function search(query: string, sortby: string, orderBy: string) {
+  return productRepository.searchProduct(query, sortby, orderBy);
 }
