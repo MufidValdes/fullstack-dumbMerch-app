@@ -3,73 +3,105 @@ import Sidebar from '@/components/layout/sidebar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ProductDTO } from '@/types/product';
 import { useParams } from 'react-router-dom';
 import { NavIcons } from '../dashboard/page';
-import { products } from './page';
+import { useAppDispatch, useAppSelector } from '@/app/stores/stores';
+import { useEffect } from 'react';
+import { getProduct, updateProduct } from '@/app/stores/product/async';
+import { useProductForm } from './hooks/useProductForm';
 
 const ProductEditPage = () => {
   const { id } = useParams<{ id: string }>();
-  const product: ProductDTO | undefined = products.find(
-    (item) => item.id === Number(id)
+  const dispatch = useAppDispatch();
+  const product = useAppSelector((state) =>
+    state.product.Products.find((c) => c.id === Number(id))
   );
-  if (!product) return <div>Product not found</div>;
+
+  const { formData, images, handleChange, handleImageChange, setFormData } =
+    useProductForm({
+      id: product?.id || 0,
+      product_name: product?.product_name || '',
+      description: product?.description || '',
+      price: product?.price || 0,
+      stock: product?.stock || 0,
+    });
+
+  useEffect(() => {
+    if (!product) {
+      dispatch(getProduct());
+    } else {
+      setFormData(product);
+    }
+  }, [dispatch, product, setFormData]);
+
+  const handleSave = () => {
+    if (product) {
+      dispatch(
+        updateProduct({
+          ...formData,
+          images,
+          // images: images.length > 0 ? images : product.images, // Menggunakan gambar yang ada jika tidak ada yang diunggah
+        })
+      );
+    }
+  };
 
   return (
     <div className="flex h-screen bg-gray-900 text-white">
-      {/* sidebar */}
       <Sidebar
         icons={NavIcons}
         avatarSrc={'@user'}
       />
-      {/* Main Content */}
       <main className="flex-1 p-8 overflow-auto">
         <Navbar />
-        {/* Navbar */}
         <div className="bg-black text-white rounded-md p-8">
-          {/* Header */}
-
-          {/* ProductEdit Information */}
           <div className="m-2">
             <h2 className="text-2xl mb-4 text-red-500 font-black">
-              Edit Product{' '}
+              Edit Product
             </h2>
             <div className="flex flex-col w-full max-w-[100%] gap-8">
               <div className="flex items-center gap-1.5">
                 <Input
                   type="file"
                   id="custom-input"
-                  placeholder={product.photo}
                   className="hidden"
+                  onChange={handleImageChange}
                 />
                 <Label
                   htmlFor="custom-input"
-                  className=" bg-red-500 p-3 rounded-md max-w-[200px] border-none"
+                  className="bg-red-500 p-3 rounded-md max-w-[200px] border-none"
                 >
-                  upload image
+                  Upload Image
                 </Label>
-                <Label className="">{product.photo}</Label>
               </div>
               <Input
                 type="text"
-                placeholder={product.product_name}
+                name="product_name"
+                value={formData.product_name}
+                onChange={handleChange}
               />
               <Input
                 type="text"
-                placeholder={product.product_desc}
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
               />
               <Input
                 type="number"
-                placeholder={product.price}
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
               />
               <Input
                 type="number"
-                placeholder={'qty'}
+                name="stock"
+                value={formData.stock}
+                onChange={handleChange}
+                placeholder="Quantity"
               />
-              {/* Buy Button */}
               <Button
                 className="bg-red-500 w-full"
-                type="submit"
+                onClick={handleSave}
               >
                 Save
               </Button>

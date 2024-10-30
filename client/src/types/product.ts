@@ -1,13 +1,25 @@
 export interface IProduct {
   id: number;
-  photo: string;
   product_name: string;
-  product_desc?: string;
-  price: string;
-  qty: number;
-  date?: string;
-  subTotal?: string;
+  description: string;
+  price: number;
+  stock: number;
+  categoryId: number;
+  orderItems: OrderItems;
+  images: ProductImages[];
 }
 
+export interface OrderItems {
+  id: number;
+  orderId: number;
+  quantity: number;
+  price: number;
+}
+
+export interface ProductImages {
+  id: number;
+  productId: number;
+  imageUrl: string;
+}
 export interface Transaction extends IProduct {}
 export interface ProductDTO extends IProduct {}

@@ -13,19 +13,22 @@ const ProductRow: React.FC<ProductProps> = ({ product, index }) => {
     <TableRow className={index % 2 === 0 ? 'bg-[#303030]' : 'bg-[#232323]'}>
       <TableCell className="font-medium">{product.id}</TableCell>
       <TableCell>
-        {/* <img
-                src={product.photo}
-                alt={product.product_name}
-                width={50}
-                height={50}
-                className="rounded-md"
-              /> */}
-        {product.photo}
+        <div className="lg:flex ">
+          {product.images.map((image) => (
+            <img
+              src={image.imageUrl}
+              alt="product"
+              width={50}
+              height={50}
+              className="rounded-md"
+            />
+          ))}
+        </div>
       </TableCell>
       <TableCell>{product.product_name}</TableCell>
-      <TableCell>{product.product_desc}</TableCell>
+      <TableCell>{product.description}</TableCell>
       <TableCell>{product.price}</TableCell>
-      <TableCell>{product.qty}</TableCell>
+      <TableCell>{product.stock}</TableCell>
       <TableCell className="text-right space-x-2 flex">
         <Link to={`/product/${product.id}`}>
           <Button className="bg-green-500 text-white">Edit</Button>
