@@ -1,14 +1,13 @@
 import { api } from '@/app/api/apiconfig';
-import { ProductFormInputs } from '@/features/pages/Product/page';
-import { IProduct } from '@/types/product';
+import { IUserProfile } from '@/types/users';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 
-export const getProduct = createAsyncThunk(
-  'product/getAll',
+export const getProfile = createAsyncThunk(
+  'Profile/getAll',
   async (_, thunkAPI) => {
     try {
-      const res = await api.get('/product');
+      const res = await api.get('/profile');
       console.log(res.data);
       return res.data;
     } catch (error) {
@@ -21,11 +20,11 @@ export const getProduct = createAsyncThunk(
   }
 );
 
-export const createProduct = createAsyncThunk(
-  'product/create',
-  async (data: IProduct, thunkAPI) => {
+export const createProfile = createAsyncThunk(
+  'Profile/create',
+  async (data: IUserProfile, thunkAPI) => {
     try {
-      const res = await api.post('/product', data);
+      const res = await api.post('/profile', data);
       console.log(res.data);
       return res.data;
     } catch (error) {
@@ -38,11 +37,11 @@ export const createProduct = createAsyncThunk(
   }
 );
 
-export const updateProduct = createAsyncThunk(
-  'product/update',
-  async ({ id, ...data }: IProduct, thunkAPI) => {
+export const updateProfile = createAsyncThunk(
+  'Profile/update',
+  async ({ ...data }: IUserProfile, thunkAPI) => {
     try {
-      const res = await api.put(`/product/${id}`, data);
+      const res = await api.put(`/profile`, data);
       console.log(res.data);
       return res.data;
     } catch (error) {
@@ -55,11 +54,11 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
-export const deleteProduct = createAsyncThunk(
-  'product/delete',
+export const deleteProfile = createAsyncThunk(
+  'Profile/delete',
   async (id: number, thunkAPI) => {
     try {
-      const res = await api.delete(`/product/${id}`);
+      const res = await api.delete(`/profile/${id}`);
       console.log(res.data);
       return res.data;
     } catch (error) {

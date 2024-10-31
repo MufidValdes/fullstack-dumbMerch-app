@@ -9,8 +9,12 @@ export interface Iuser {
 export interface IUserProfile {
   id: number;
   fullname: string;
-  phone?: string;
-  address?: string;
-  gender?: string;
+  phone: string;
+  address: string;
+  gender: string;
   avatar?: string;
+  user: {
+    email: string;
+    username: string;
+  };
 }

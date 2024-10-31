@@ -1,7 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './auth/slice';
 import categoryReducer from './category/slice';
-import productReducer from './product/slince';
+import productReducer from './product/slice';
+import profileReducer from './profile/slice';
 import { useDispatch, useSelector } from 'react-redux';
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     auth: authReducer,
     categories: categoryReducer,
     product: productReducer,
+    profile: profileReducer,
   },
 });
 

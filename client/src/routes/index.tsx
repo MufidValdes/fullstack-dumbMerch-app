@@ -11,6 +11,8 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ProtectedRoute } from './_protected-routes';
 import CategoryEditPage from '@/features/pages/category/EditPage';
 import ProductEditPage from '@/features/pages/Product/EditPage';
+import CartPage from '@/features/pages/cart/page';
+import ProfileAdminPage from '@/features/pages/profile/pageAdmin';
 export function AppRouter() {
   const router = createBrowserRouter([
     {
@@ -59,6 +61,14 @@ export function AppRouter() {
         {
           path: '/product/',
           element: <ProductPage />,
+        },
+        {
+          path: '/cart',
+          element: <CartPage />,
+        },
+        {
+          path: '/admin-profile',
+          element: <ProfileAdminPage />,
         },
       ],
     },

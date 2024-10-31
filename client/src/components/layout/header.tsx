@@ -1,5 +1,6 @@
 import { Link, NavLink } from 'react-router-dom';
 import { Button } from '../ui/button';
+import CartIcon from '@/features/pages/market/component/shoppingCart';
 
 export const Header = () => {
   return (
@@ -64,6 +65,11 @@ export const Header = () => {
           </Button>
         </NavLink>
       </div>
+      <Link to="/cart">
+        <div className="">
+          <CartIcon itemCount={6} />
+        </div>
+      </Link>
     </div>
   );
 };

@@ -11,6 +11,7 @@ import { NavIcons } from '../dashboard/page';
 const CategoryEditPage = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
+  const avatar = useAppSelector((state) => state.profile.profile.avatar);
   const category = useAppSelector((state) =>
     state.categories.categories.find((c) => c.id === Number(id))
   );
@@ -31,12 +32,13 @@ const CategoryEditPage = () => {
       );
     }
   };
+
   return (
     <div className="flex h-screen bg-gray-900 text-white">
       {/* sidebar */}
       <Sidebar
         icons={NavIcons}
-        avatarSrc={'@user'}
+        avatarSrc={avatar!}
       />
       {/* Main Content */}
       <main className="flex-1 p-8 overflow-auto">

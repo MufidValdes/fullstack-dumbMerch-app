@@ -1,9 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { AuthForm } from '../authFormLayout';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { LoginAsync } from '@/app/stores/auth/async'; // Adjust import based on your structure
 import { useAppDispatch, useAppSelector } from '@/app/stores/stores';
+import { useEffect } from 'react';
 
 interface LoginData {
   email: string;
@@ -19,30 +20,20 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<LoginData>();
 
+  const user = useAppSelector((state) => state.auth.user);
   const handleLoginSubmit = async (data: LoginData) => {
     const res = await dispatch(LoginAsync(data));
     if (LoginAsync.fulfilled.match(res)) {
       navigate('/');
     }
   };
-
-  const user = useAppSelector((state) => state.auth.user);
-  if (user?.role === 'USER') {
-    return (
-      <Navigate
-        to="/"
-        replace
-      />
-    );
-  }
-  if (user?.role === 'ADMIN') {
-    return (
-      <Navigate
-        to="/dashboard"
-        replace
-      />
-    );
-  }
+  useEffect(() => {
+    if (user?.role === 'USER') {
+      navigate('/');
+    } else if (user?.role === 'ADMIN') {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
   return (
     <div className="flex items-center justify-between w-screen h-screen bg-black">
       {/* Left Section */}

@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { Button } from '../ui/button';
 import {
   DropdownMenu,
@@ -53,6 +53,7 @@ function Sidebar({ icons, avatarSrc }: SidebarProps) {
             <AvatarImage
               src={avatarSrc}
               alt="@user"
+              className="object-cover rounded-full w-10 h-10 border-2"
             />
             <AvatarFallback>A</AvatarFallback>
           </Avatar>
@@ -64,7 +65,14 @@ function Sidebar({ icons, avatarSrc }: SidebarProps) {
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                to="/admin-profile"
+                className="w-full"
+              >
+                <span>Profile</span>
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />

@@ -1,0 +1,80 @@
+import { IUserProfile } from '@/types/users';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { createProfile, deleteProfile, getProfile } from './async';
+
+interface ProfileState {
+  profile: IUserProfile;
+  loading: boolean;
+  error: string | null;
+}
+
+const initialState: ProfileState = {
+  profile: {} as IUserProfile,
+  loading: false,
+  error: null,
+};
+
+const ProfileSlice = createSlice({
+  name: 'Profile',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(getProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        getProfile.fulfilled,
+        (state, action: PayloadAction<IUserProfile>) => {
+          state.loading = false;
+          state.profile = action.payload;
+        }
+      )
+      .addCase(getProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+
+    builder
+      .addCase(createProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(createProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createProfile.rejected, (state) => {
+        state.loading = false;
+      });
+
+    // builder
+    //   .addCase(updateprofile.fulfilled, (state, action) => {
+    //     state.loading = false;
+    //     state.error = action.payload as string;
+    //   })
+    //   .addCase(updateprofile.pending, (state) => {
+    //     state.loading = true;
+    //     state.error = null;
+    //   })
+    //   .addCase(updateprofile.rejected, (state) => {
+    //     state.loading = false;
+    //   });
+
+    builder
+      .addCase(deleteProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(deleteProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteProfile.rejected, (state) => {
+        state.loading = false;
+      });
+  },
+});
+
+export default ProfileSlice.reducer;

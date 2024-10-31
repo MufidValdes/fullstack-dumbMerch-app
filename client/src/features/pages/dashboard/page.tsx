@@ -9,6 +9,8 @@ import { FaCartPlus, FaHome } from 'react-icons/fa';
 import { TbCategoryPlus, TbMessageReportFilled } from 'react-icons/tb';
 import { StatsCard } from './component/statsCard';
 import { StatusTable } from './component/statusTable';
+import { useAppSelector } from '@/app/stores/stores';
+
 const invoiceData = [
   { date: '04 Jul', quotation: 5, approval: 20 },
   { date: '05 Jul', quotation: 15, approval: 35 },
@@ -42,13 +44,15 @@ export const NavIcons: Array<LinkItemProps> = [
   { icon: TbCategoryPlus, routelink: '/category' },
   { icon: FaCartPlus, routelink: '/product' },
 ];
+
 export default function Dashboard() {
+  const avatar = useAppSelector((state) => state.profile.profile.avatar);
   return (
     <div className="flex h-screen bg-gray-900 text-white">
       {/* sidebar */}
       <Sidebar
         icons={NavIcons}
-        avatarSrc={'@user'}
+        avatarSrc={avatar!}
       />
       {/* Main Content */}
       <main className="flex-1 p-8 overflow-auto">
