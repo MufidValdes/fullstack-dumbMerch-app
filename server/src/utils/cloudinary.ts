@@ -1,6 +1,7 @@
 // src/utils/cloudinary.ts
 import { ProductImageDTO } from '@src/dto/product.dto';
 import { v2 as cloudinary } from 'cloudinary';
+import { url } from 'inspector';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -27,6 +28,18 @@ export const uploadImage = async (files: Express.Multer.File[]) => {
   );
 
   return urls;
+};
+
+export const uploadSingle = async (file: Express.Multer.File) => {
+  console.log(file);
+  const b64 = Buffer.from(file.buffer).toString('base64');
+  const dataURI = 'data:' + file.mimetype + ';base64,' + b64;
+  const result = await cloudinary.uploader.upload(dataURI, {
+    folder: 'profile_users',
+    use_filename: true,
+    unique_filename: true,
+  });
+  return { url: result.secure_url };
 };
 
 export const deleteImage = async (publicId: string) => {

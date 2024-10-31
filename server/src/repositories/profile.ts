@@ -14,5 +14,13 @@ export const updateProfileByUserId = async (
 export const getProfileByUserId = async (userId: number) => {
   return prisma.profiles.findUnique({
     where: { userId },
+    include: {
+      user: {
+        select: {
+          email: true,
+          username: true,
+        },
+      },
+    },
   });
 };

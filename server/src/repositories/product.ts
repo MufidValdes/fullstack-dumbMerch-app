@@ -70,6 +70,12 @@ export const updateProduct = async (
   });
 };
 export async function deleteProduct(productId: number) {
+  // Hapus semua gambar terkait dari tabel `product_images`
+  await prisma.productImages.deleteMany({
+    where: { productId },
+  });
+
+  // Kemudian hapus produk dari tabel `products`
   return await prisma.products.delete({
     where: { id: productId },
   });
