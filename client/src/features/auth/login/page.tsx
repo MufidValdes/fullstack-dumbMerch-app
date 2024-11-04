@@ -2,10 +2,10 @@ import { Button } from '@/components/ui/button';
 import { AuthForm } from '../authFormLayout';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { LoginAsync } from '@/app/stores/auth/async'; // Adjust import based on your structure
+import { LoginAsync, checkAuth } from '@/app/stores/auth/async'; // Adjust import based on your structure
 import { useAppDispatch, useAppSelector } from '@/app/stores/stores';
 import { useEffect } from 'react';
-
+import Swal from 'sweetalert2';
 interface LoginData {
   email: string;
   password: string;
@@ -21,11 +21,15 @@ export default function LoginPage() {
   } = useForm<LoginData>();
 
   const user = useAppSelector((state) => state.auth.user);
+
   const handleLoginSubmit = async (data: LoginData) => {
-    const res = await dispatch(LoginAsync(data));
-    if (LoginAsync.fulfilled.match(res)) {
-      navigate('/');
-    }
+    await dispatch(LoginAsync(data));
+    Swal.fire({
+      title: 'Login Success!',
+      icon: 'success',
+    });
+    dispatch(checkAuth());
+    // navigate('/');
   };
   useEffect(() => {
     if (user?.role === 'USER') {
@@ -34,6 +38,7 @@ export default function LoginPage() {
       navigate('/dashboard');
     }
   }, [user, navigate]);
+
   return (
     <div className="flex items-center justify-between w-screen h-screen bg-black">
       {/* Left Section */}

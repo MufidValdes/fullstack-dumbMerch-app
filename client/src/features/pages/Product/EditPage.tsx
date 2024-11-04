@@ -3,7 +3,7 @@ import Sidebar from '@/components/layout/sidebar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { NavIcons } from '../dashboard/page';
 import { useAppDispatch, useAppSelector } from '@/app/stores/stores';
 import { useEffect } from 'react';
@@ -12,6 +12,7 @@ import { useProductForm } from './hooks/useProductForm';
 
 const ProductEditPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const avatar = useAppSelector((state) => state.profile.profile.avatar);
   const product = useAppSelector((state) =>
@@ -45,6 +46,7 @@ const ProductEditPage = () => {
         })
       );
     }
+    navigate('/product');
   };
 
   return (

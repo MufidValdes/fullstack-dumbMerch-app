@@ -5,6 +5,10 @@ export interface Iuser {
   profile: IUserProfile;
   role: 'USER' | 'ADMIN';
 }
+export enum Roles {
+  USER,
+  ADMIN,
+}
 
 export interface IUserProfile {
   id: number;

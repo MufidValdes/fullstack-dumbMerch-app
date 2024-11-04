@@ -1,13 +1,30 @@
 import { api } from '@/app/api/apiconfig';
-import { IUserProfile } from '@/types/users';
+import { IAddToCartDTO, ICartItemDTO } from '@/types/cart';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Swal from 'sweetalert2';
 
-export const getProfile = createAsyncThunk(
-  'Profile/getAll',
-  async (_, thunkAPI) => {
+export const getCart = createAsyncThunk('cart/getAll', async (_, thunkAPI) => {
+  try {
+    const res = await api.get('/cart');
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    if (error instanceof Error) {
+      Swal.fire({
+        title: error.message,
+        icon: 'error',
+      });
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+});
+
+export const addToCart = createAsyncThunk(
+  'cart/addToCart',
+  async (data: IAddToCartDTO, thunkAPI) => {
     try {
-      const res = await api.get('/profile');
+      const res = await api.post('/cart', data);
       console.log(res.data);
       return res.data;
     } catch (error) {
@@ -23,11 +40,11 @@ export const getProfile = createAsyncThunk(
   }
 );
 
-export const createProfile = createAsyncThunk(
-  'Profile/create',
-  async (data: IUserProfile, thunkAPI) => {
+export const updateCartItem = createAsyncThunk(
+  'cart/updateCartItem',
+  async ({ id, ...data }: ICartItemDTO, thunkAPI) => {
     try {
-      const res = await api.post('/profile', data);
+      const res = await api.put(`/cart/${id}`, data);
       console.log(res.data);
       return res.data;
     } catch (error) {
@@ -43,31 +60,11 @@ export const createProfile = createAsyncThunk(
   }
 );
 
-export const updateProfile = createAsyncThunk(
-  'Profile/update',
-  async (formData: FormData, thunkAPI) => {
-    try {
-      const res = await api.put(`/profile`, formData);
-      console.log(res.data);
-      return res.data;
-    } catch (error) {
-      console.log(error);
-      if (error instanceof Error) {
-        Swal.fire({
-          title: error.message,
-          icon: 'error',
-        });
-        return thunkAPI.rejectWithValue(error.message);
-      }
-    }
-  }
-);
-
-export const deleteProfile = createAsyncThunk(
-  'Profile/delete',
+export const removeCartItem = createAsyncThunk(
+  'cart/deleteCartItem',
   async (id: number, thunkAPI) => {
     try {
-      const res = await api.delete(`/profile/${id}`);
+      const res = await api.delete(`/cart/${id}`);
       console.log(res.data);
       return res.data;
     } catch (error) {

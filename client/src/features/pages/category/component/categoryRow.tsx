@@ -16,7 +16,7 @@ const ProductRow: React.FC<ProductProps> = ({ category, index }) => {
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handleDelete = async () => {
-    await dispatch(deleteCategories(category.id));
+    await dispatch(deleteCategories(category?.id));
     dispatch(getCategories());
     setShowConfirm(false);
   };

@@ -1,60 +1,104 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Minus, Plus, ShoppingCart, X } from 'lucide-react';
+import {
+  getCart,
+  removeCartItem,
+  updateCartItem,
+} from '@/app/stores/cart/async';
+import { useAppDispatch, useAppSelector } from '@/app/stores/stores';
+import { Header } from '@/components/layout/header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Header } from '@/components/layout/header';
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
+import { ICartItemDTO } from '@/types/cart';
+import { motion } from 'framer-motion';
+import { Minus, Plus, ShoppingCart, X } from 'lucide-react';
+import { useEffect } from 'react';
+import Swal from 'sweetalert2';
+// interface CartItem {
+//   id: number;
+//   name: string;
+//   price: number;
+//   quantity: number;
+//   image: string;
+// }
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: 'Quantum Processor',
-      price: 999.99,
-      quantity: 1,
-      image: '/placeholder.svg?height=80&width=80',
-    },
-    {
-      id: 2,
-      name: 'Holo Display',
-      price: 599.99,
-      quantity: 2,
-      image: '/placeholder.svg?height=80&width=80',
-    },
-    {
-      id: 3,
-      name: 'Neural Interface',
-      price: 1299.99,
-      quantity: 1,
-      image: '/placeholder.svg?height=80&width=80',
-    },
-  ]);
+  const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.items);
 
-  const updateQuantity = (id: number, newQuantity: number) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item.id === id ? { ...item, quantity: Math.max(0, newQuantity) } : item
-      )
-    );
+  // const [cartItems, setCartItems] = useState<CartItem[]>([
+  //   {
+  //     id: 1,
+  //     name: 'Quantum Processor',
+  //     price: 999.99,
+  //     quantity: 1,
+  //     image: '/placeholder.svg?height=80&width=80',
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Holo Display',
+  //     price: 599.99,
+  //     quantity: 2,
+  //     image: '/placeholder.svg?height=80&width=80',
+  //   },
+  //   {
+  //     id: 3,
+  //     name: 'Neural Interface',
+  //     price: 1299.99,
+  //     quantity: 1,
+  //     image: '/placeholder.svg?height=80&width=80',
+  //   },
+  // ]);
+  useEffect(() => {
+    dispatch(getCart());
+  }, [dispatch]);
+
+  const updateQuantity = async (id: number, quantity: number) => {
+    const data: ICartItemDTO = {
+      id,
+      quantity,
+    };
+    // setCartItems((items) =>
+    //   items.map((item) =>
+    //     item.id === id ? { ...item, quantity: Math.max(0, newQuantity) } : item
+    //   )
+    // );
+    await dispatch(updateCartItem(data));
+    dispatch(getCart());
   };
 
-  const removeItem = (id: number) => {
-    setCartItems((items) => items.filter((item) => item.id !== id));
+  // const handleRemoveItem = (id: number) => {
+  //   setCartItems((items) => items.filter((item) => item.id !== id));
+  // };
+  const handleRemoveItem = (id: number) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await dispatch(removeCartItem(id));
+        Swal.fire({
+          title: 'Deleted!',
+          text: 'Your file has been deleted.',
+          icon: 'success',
+        });
+        dispatch(getCart());
+      }
+    });
   };
 
-  const total = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-
+  // const total = cartItems.reduce(
+  //   (sum, item) => sum + item.price * item.quantity,
+  //   0
+  // );
+  const total =
+    cartItems?.cartItems?.reduce(
+      (sum, item) => sum + Number(item.price) * item.quantity,
+      0
+    ) ?? 0;
   return (
     <div className="min-h-screen bg-black  text-white p-8">
       <motion.div
@@ -65,23 +109,32 @@ export default function CartPage() {
       >
         <Header />
         <div className="space-y-4">
-          {cartItems.map((item) => (
+          {cartItems?.cartItems?.map((item) => (
             <motion.div
-              key={item.id}
+              key={item.cartId}
               layout
             >
               <Card className="bg-[#303030] border-gray-700">
                 <CardContent className="p-4 flex items-center text-white justify-between">
                   <div className="flex items-center space-x-4">
                     <img
-                      src={item.image}
-                      alt={item.name}
+                      src={
+                        item.product?.images?.find(
+                          (img) => img.productId === item.productId
+                        )?.imageUrl || '/placeholder.svg'
+                      }
+                      alt={item.product.product_name}
                       className="w-20 h-20 rounded-lg object-cover"
                     />
                     <div>
-                      <h3 className="font-semibold text-lg">{item.name}</h3>
+                      <h3 className="font-semibold text-lg">
+                        {item.product.product_name}
+                      </h3>
                       <p className="text-sm text-gray-400">
-                        ${item.price.toFixed(2)}
+                        $
+                        {item.price
+                          ? parseFloat(item.price).toFixed(2)
+                          : '0.00'}
                       </p>
                     </div>
                   </div>
@@ -113,7 +166,7 @@ export default function CartPage() {
                       size="icon"
                       variant="ghost"
                       className="text-red-500 hover:text-red-600 hover:bg-red-500/20"
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => handleRemoveItem(item.id)}
                     >
                       <X className="h-5 w-5" />
                     </Button>

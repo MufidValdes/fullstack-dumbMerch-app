@@ -13,6 +13,7 @@ import CategoryEditPage from '@/features/pages/category/EditPage';
 import ProductEditPage from '@/features/pages/Product/EditPage';
 import CartPage from '@/features/pages/cart/page';
 import ProfileAdminPage from '@/features/pages/profile/pageAdmin';
+import ComplainPage from '@/features/pages/customerService/adminPage';
 export function AppRouter() {
   const router = createBrowserRouter([
     {
@@ -24,7 +25,7 @@ export function AppRouter() {
       element: <RegisterPage />,
     },
     {
-      element: <ProtectedRoute />,
+      element: <ProtectedRoute role={'USER'} />,
       children: [
         {
           path: '/',
@@ -43,6 +44,19 @@ export function AppRouter() {
           element: <DetailPage />,
         },
         {
+          path: '/cart',
+          element: <CartPage />,
+        },
+      ],
+    },
+    {
+      element: <ProtectedRoute role={'ADMIN'} />,
+      children: [
+        {
+          path: '/dashboard',
+          element: <Dashboard />,
+        },
+        {
           path: '/category/',
           element: <CategoryPage />,
         },
@@ -51,24 +65,20 @@ export function AppRouter() {
           element: <CategoryEditPage />,
         },
         {
+          path: '/product',
+          element: <ProductPage />,
+        },
+        {
           path: '/product/:id',
           element: <ProductEditPage />,
         },
         {
-          path: '/dashboard',
-          element: <Dashboard />,
-        },
-        {
-          path: '/product/',
-          element: <ProductPage />,
-        },
-        {
-          path: '/cart',
-          element: <CartPage />,
-        },
-        {
           path: '/admin-profile',
           element: <ProfileAdminPage />,
+        },
+        {
+          path: '/admin-complain',
+          element: <ComplainPage />,
         },
       ],
     },

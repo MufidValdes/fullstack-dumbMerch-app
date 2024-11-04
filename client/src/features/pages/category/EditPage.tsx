@@ -5,12 +5,13 @@ import Sidebar from '@/components/layout/sidebar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { NavIcons } from '../dashboard/page';
 
 const CategoryEditPage = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const avatar = useAppSelector((state) => state.profile.profile.avatar);
   const category = useAppSelector((state) =>
     state.categories.categories.find((c) => c.id === Number(id))
@@ -30,6 +31,7 @@ const CategoryEditPage = () => {
       dispatch(
         updateCategories({ id: category.id, category_name: categoryName })
       );
+      navigate('/category');
     }
   };
 

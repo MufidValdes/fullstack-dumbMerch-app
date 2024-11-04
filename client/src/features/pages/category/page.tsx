@@ -77,10 +77,10 @@ const CategoryPage = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <div className="grid gap-4 py-4 ml-4 p-4 rounded-lg">
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="category_name">Product Name</Label>
+                          <Label htmlFor="category_name">Category Name</Label>
                           <Input
                             id="category_name"
-                            placeholder="Product Name"
+                            placeholder="Category Name"
                             {...register('category_name')}
                             className="col-span-3"
                           />

@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { RiEdit2Fill } from 'react-icons/ri';
 import ProfileInfo from './component/profile-info';
 import { TransactionCard } from './component/transaction-card';
@@ -25,47 +25,11 @@ import { useForm } from 'react-hook-form';
 import { IUserProfile } from '@/types/users';
 
 const ProfilePage = () => {
-  const transactions = [
-    {
-      item: 'wallpapers',
-      date: 'Saturday, 14 Juli 2021',
-      price: 'Rp.500.000',
-      subTotal: '500.000',
-      image: 'https://wallpapercave.com/uwp/uwp4532001.jpeg',
-    },
-    {
-      item: 'wallpapers',
-      date: 'Saturday, 14 Juli 2021',
-      price: 'Rp.500.000',
-      subTotal: '500.000',
-      image: 'https://wallpapercave.com/uwp/uwp4532001.jpeg',
-    },
-    {
-      item: 'wallpapers',
-      date: 'Saturday, 14 Juli 2021',
-      price: 'Rp.500.000',
-      subTotal: '500.000',
-      image: 'https://wallpapercave.com/uwp/uwp4532001.jpeg',
-    },
-    {
-      item: 'wallpapers',
-      date: 'Saturday, 14 Juli 2021',
-      price: 'Rp.500.000',
-      subTotal: '500.000',
-      image: 'https://wallpapercave.com/uwp/uwp4532001.jpeg',
-    },
-    {
-      item: 'wallpapers',
-      date: 'Saturday, 14 Juli 2021',
-      price: 'Rp.500.000',
-      subTotal: '500.000',
-      image: 'https://wallpapercave.com/uwp/uwp4532001.jpeg',
-    },
+  const transactions: any[] = [
+    /* array data transaksi */
   ];
-
   const dispatch = useAppDispatch();
   const { profile, loading, error } = useAppSelector((state) => state.profile);
-
   const user = useAppSelector((state) => state.auth.user);
   const { register, handleSubmit, reset } = useForm<IUserProfile>({
     defaultValues: {
@@ -75,25 +39,44 @@ const ProfilePage = () => {
       address: '',
     },
   });
+
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
+
   useEffect(() => {
     dispatch(getProfile());
   }, [dispatch]);
 
   useEffect(() => {
     if (profile) {
-      reset({
-        fullname: profile.fullname,
-        phone: profile.phone,
-        gender: profile.gender,
-        address: profile.address,
-      });
+      reset(profile);
+      setPreviewAvatar(profile.avatar || '/default-avatar.png');
     }
   }, [profile, reset]);
 
   const onSubmit = async (data: IUserProfile) => {
-    await dispatch(updateProfile(data));
+    const formData = new FormData();
+    formData.append('fullname', data.fullname);
+    formData.append('address', data.address);
+    formData.append('gender', data.gender);
+    formData.append('phone', data.phone.toString());
+
+    if (avatarFile) {
+      formData.append('avatar', avatarFile); // Tambahkan file avatar jika ada
+    }
+
+    await dispatch(updateProfile(formData));
     dispatch(getProfile());
   };
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setAvatarFile(file);
+      setPreviewAvatar(URL.createObjectURL(file)); // Set preview avatar
+    }
+  };
+
   return (
     <div className="bg-black text-white min-h-max w-[100%] p-8 items-center m-auto">
       <motion.div
@@ -104,6 +87,11 @@ const ProfilePage = () => {
       >
         {/* Header */}
         <Header />
+        {error && (
+          <div className="">
+            <h1>Error: {error}</h1>
+          </div>
+        )}
 
         {/* Profile Section */}
         <div className=" lg:flex w-[100%] justify-between">
@@ -131,111 +119,120 @@ const ProfilePage = () => {
                         you're done.
                       </DialogDescription>
                     </DialogHeader>
-                    <div className="flex ">
-                      <div className="lg:w-[200px] m-auto w-[100px]">
-                        <img
-                          src={
-                            'https://wallpapercave.com/wp/wp13357407.jpg' ||
-                            profile.avatar
-                          }
-                          alt="Profile"
-                          className="rounded-full lg:rounded-lg w-64 h-64 lg:w-full lg::h-full object-cover "
-                        />
-                      </div>
-                      <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="grid gap-4 py-4 ml-4">
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label
-                              htmlFor="name"
-                              className="text-left"
-                            >
-                              Name
-                            </Label>
-                            <Input
-                              id="name"
-                              placeholder={profile.fullname}
-                              className="col-span-3"
-                              {...register('fullname')}
-                            />
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                      <div className="flex ">
+                        <label
+                          htmlFor="avatar-upload"
+                          className="cursor-pointer"
+                        >
+                          <img
+                            src={previewAvatar || '/default-avatar.png'}
+                            alt="avatar"
+                            className="w-[200px] h-[300px] object-cover rounded-md"
+                          />
+                          <input
+                            type="file"
+                            id="avatar-upload"
+                            className="hidden"
+                            onChange={handleAvatarChange}
+                          />
+                        </label>
+                        <div className="">
+                          <div className="grid gap-4 py-4 ml-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label
+                                htmlFor="name"
+                                className="text-left"
+                              >
+                                Name
+                              </Label>
+                              <Input
+                                id="name"
+                                placeholder={profile.fullname}
+                                className="col-span-3"
+                                {...register('fullname')}
+                              />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label
+                                htmlFor="email"
+                                className="text-left"
+                              >
+                                Email
+                              </Label>
+                              <Input
+                                disabled
+                                id="email"
+                                placeholder={user?.email}
+                                className="col-span-3"
+                              />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label
+                                htmlFor="Phone"
+                                className="text-left"
+                              >
+                                Phone
+                              </Label>
+                              <Input
+                                id="Phone"
+                                placeholder={profile.phone}
+                                className="col-span-3"
+                                {...register('phone')}
+                              />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label
+                                htmlFor="gender"
+                                className="text-left"
+                              >
+                                Gender
+                              </Label>
+                              <RadioGroup defaultValue="MALE">
+                                <div className="flex items-center space-x-2">
+                                  <RadioGroupItem
+                                    value="FEMALE"
+                                    id="r1"
+                                    {...register('gender')}
+                                  />
+                                  <Label htmlFor="r1">Female</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <RadioGroupItem
+                                    value="MALE"
+                                    id="r2"
+                                    {...register('gender')}
+                                  />
+                                  <Label htmlFor="r2">Male</Label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label
+                                htmlFor="Address"
+                                className="text-left"
+                              >
+                                Address
+                              </Label>
+                              <Textarea
+                                className="col-span-3"
+                                placeholder="Type your Address here."
+                                id="Address"
+                                {...register('address')}
+                              />
+                            </div>
                           </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label
-                              htmlFor="email"
-                              className="text-left"
+                          <DialogFooter>
+                            <Button
+                              type="submit"
+                              disabled={loading}
                             >
-                              Email
-                            </Label>
-                            <Input
-                              id="email"
-                              placeholder={user?.email}
-                              className="col-span-3"
-                            />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label
-                              htmlFor="Phone"
-                              className="text-left"
-                            >
-                              Phone
-                            </Label>
-                            <Input
-                              id="Phone"
-                              placeholder={profile.phone}
-                              className="col-span-3"
-                              {...register('phone')}
-                            />
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label
-                              htmlFor="gender"
-                              className="text-left"
-                            >
-                              Gender
-                            </Label>
-                            <RadioGroup defaultValue="MALE">
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem
-                                  value="FEMALE"
-                                  id="r1"
-                                  {...register('gender')}
-                                />
-                                <Label htmlFor="r1">Female</Label>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem
-                                  value="MALE"
-                                  id="r2"
-                                  {...register('gender')}
-                                />
-                                <Label htmlFor="r2">Male</Label>
-                              </div>
-                            </RadioGroup>
-                          </div>
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label
-                              htmlFor="Address"
-                              className="text-left"
-                            >
-                              Address
-                            </Label>
-                            <Textarea
-                              className="col-span-3"
-                              placeholder="Type your Address here."
-                              id="Address"
-                              {...register('address')}
-                            />
-                          </div>
+                              Save changes
+                            </Button>
+                          </DialogFooter>
                         </div>
-                        <DialogFooter>
-                          <Button
-                            type="submit"
-                            disabled={loading}
-                          >
-                            Save changes
-                          </Button>
-                        </DialogFooter>
-                      </form>
-                    </div>
+                      </div>
+                    </form>
                   </DialogContent>
                 </Dialog>
                 <img

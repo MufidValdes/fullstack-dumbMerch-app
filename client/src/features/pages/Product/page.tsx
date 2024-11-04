@@ -20,7 +20,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { useForm } from 'react-hook-form';
-import { IProduct } from '@/types/product';
+import { useNavigate } from 'react-router-dom';
 
 export type ProductFormInputs = {
   product_name: string;
@@ -30,9 +30,10 @@ export type ProductFormInputs = {
   categoryId: number;
   images: FileList;
 };
-type ProductInputsDTO = Omit<IProduct, 'id' | 'orderItems'>;
+// type ProductInputsDTO = Omit<IProduct, 'id' | 'orderItems'>;
 
 const ProductPage = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { Products, loading, error } = useAppSelector((state) => state.product);
   const avatar = useAppSelector((state) => state.profile.profile.avatar);
@@ -79,6 +80,7 @@ const ProductPage = () => {
     dispatch(getProduct()); // Refresh product list after creation
     reset(); // Reset form fields after submission
     setPreviewImages([]); // Reset the preview image
+    navigate('/product');
   };
 
   return (

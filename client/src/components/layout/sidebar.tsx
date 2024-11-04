@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import {
   DropdownMenu,
@@ -11,7 +11,9 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { IconType } from 'react-icons';
-
+import { useAppDispatch } from '@/app/stores/stores';
+import { logout } from '@/app/stores/auth/slice';
+import Swal from 'sweetalert2';
 export interface LinkItemProps {
   icon: IconType;
   routelink: string;
@@ -20,8 +22,31 @@ interface SidebarProps {
   icons: LinkItemProps[]; // Array objek dengan tipe IconType dan rute
   avatarSrc: string;
 }
-
 function Sidebar({ icons, avatarSrc }: SidebarProps) {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    Swal.fire({
+      title: 'Anda yakin ingin keluar?',
+      text: 'Akun Anda akan logout dan Anda harus login kembali untuk mengakses.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, keluar',
+      cancelButtonText: 'Batal',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(logout());
+        Swal.fire({
+          title: 'Logout Berhasil',
+          text: 'Anda telah berhasil keluar.',
+          icon: 'success',
+        });
+        navigate('/login');
+      }
+    });
+  };
   return (
     <aside className="w-16 bg-black p-4 flex flex-col items-center justify-between">
       {/* Bagian ikon navigasi */}
@@ -76,7 +101,14 @@ function Sidebar({ icons, avatarSrc }: SidebarProps) {
             <DropdownMenuItem>Settings</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Log out</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Button
+              onClick={handleLogout}
+              variant="ghost"
+            >
+              Log out
+            </Button>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </aside>

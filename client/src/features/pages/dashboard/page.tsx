@@ -40,7 +40,7 @@ const statusRows = [
 ];
 export const NavIcons: Array<LinkItemProps> = [
   { icon: FaHome, routelink: '/dashboard' },
-  { icon: TbMessageReportFilled, routelink: '/complain' },
+  { icon: TbMessageReportFilled, routelink: '/admin-complain' },
   { icon: TbCategoryPlus, routelink: '/category' },
   { icon: FaCartPlus, routelink: '/product' },
 ];

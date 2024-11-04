@@ -1,14 +1,37 @@
 // src/components/ui/ProductCard.tsx
+import { addToCart } from '@/app/stores/cart/async';
+import { useAppDispatch } from '@/app/stores/stores';
 import { Button } from '@/components/ui/button';
 import { Card, CardFooter } from '@/components/ui/card';
 import { IProduct } from '@/types/product';
 import { Link } from 'react-router-dom';
-
+import Swal from 'sweetalert2';
 interface ProductCardProps {
   product: IProduct;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const dispatch = useAppDispatch();
+  const handleAddToCart = () => {
+    const addToCartData = {
+      productId: product.id,
+      quantity: 1,
+    };
+    dispatch(addToCart(addToCartData))
+      .then(() => {
+        Swal.fire({
+          title: `${product.product_name} berhasil ditambahkan kedalam keranjang`,
+          icon: 'success',
+        });
+      })
+      .catch(() => {
+        Swal.fire({
+          title: 'Gagal ditambahkan kedalam keranjang',
+          icon: 'error',
+        });
+      });
+  };
+
   return (
     <div className="">
       <Link to={`/detail/${product.id}`}>
@@ -31,7 +54,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </CardFooter>
         </Card>
       </Link>
-      <Button className="bg-red-500 w-full mt-2">Add To Chart</Button>
+      <Button
+        onClick={handleAddToCart}
+        className="bg-red-500 w-full mt-2"
+      >
+        Add To Chart
+      </Button>
     </div>
   );
 };

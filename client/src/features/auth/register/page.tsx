@@ -1,10 +1,9 @@
-import { Button } from '@/components/ui/button';
-import { AuthForm } from '../authFormLayout';
-import { Link, useNavigate } from 'react-router-dom';
 import { RegisterAsync } from '@/app/stores/auth/async'; // Adjust the import based on your structure
-import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 import { useAppDispatch } from '@/app/stores/stores';
+import { Button } from '@/components/ui/button';
+import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthForm } from '../authFormLayout';
 
 interface FormData {
   fullname: string;
@@ -24,7 +23,6 @@ export default function RegisterPage() {
   const handleRegisterSubmit = async (data: FormData) => {
     const res = await dispatch(RegisterAsync(data));
     if (RegisterAsync.fulfilled.match(res)) {
-      toast.success('Registration successfully');
       navigate('/login');
     }
   };

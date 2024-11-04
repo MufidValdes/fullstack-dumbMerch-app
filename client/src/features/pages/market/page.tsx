@@ -112,6 +112,16 @@ export default function MarketPage() {
             ))}
           </div>
         </div>
+        {loading && (
+          <div className="">
+            <h1>Loading...</h1>
+          </div>
+        )}
+        {error && (
+          <div className="">
+            <h1>Error: {error}</h1>
+          </div>
+        )}
       </motion.div>
     </div>
   );

@@ -37,16 +37,16 @@ const categorySlice = createSlice({
       });
 
     builder
-      .addCase(addCategories.fulfilled, (state, action) => {
+      .addCase(addCategories.fulfilled, (state) => {
         state.loading = false;
-        state.error = action.payload as string;
       })
       .addCase(addCategories.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(addCategories.rejected, (state) => {
+      .addCase(addCategories.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload as string;
       });
 
     // builder
@@ -64,8 +64,9 @@ const categorySlice = createSlice({
 
     builder
       .addCase(deleteCategories.fulfilled, (state, action) => {
+        console.log(action.payload);
+
         state.loading = false;
-        state.error = action.payload as string;
       })
       .addCase(deleteCategories.pending, (state) => {
         state.loading = true;

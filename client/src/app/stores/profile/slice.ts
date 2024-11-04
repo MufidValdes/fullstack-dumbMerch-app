@@ -37,15 +37,15 @@ const ProfileSlice = createSlice({
       });
 
     builder
-      .addCase(createProfile.fulfilled, (state, action) => {
+      .addCase(createProfile.fulfilled, (state) => {
         state.loading = false;
-        state.error = action.payload as string;
       })
       .addCase(createProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createProfile.rejected, (state) => {
+      .addCase(createProfile.rejected, (state, action) => {
+        state.error = action.payload as string;
         state.loading = false;
       });
 
@@ -63,16 +63,16 @@ const ProfileSlice = createSlice({
     //   });
 
     builder
-      .addCase(deleteProfile.fulfilled, (state, action) => {
+      .addCase(deleteProfile.fulfilled, (state) => {
         state.loading = false;
-        state.error = action.payload as string;
       })
       .addCase(deleteProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteProfile.rejected, (state) => {
+      .addCase(deleteProfile.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

@@ -37,16 +37,16 @@ const ProductSlice = createSlice({
       });
 
     builder
-      .addCase(createProduct.fulfilled, (state, action) => {
+      .addCase(createProduct.fulfilled, (state) => {
         state.loading = false;
-        state.error = action.payload as string;
       })
       .addCase(createProduct.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(createProduct.rejected, (state) => {
+      .addCase(createProduct.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload as string;
       });
 
     // builder
@@ -63,16 +63,16 @@ const ProductSlice = createSlice({
     //   });
 
     builder
-      .addCase(deleteProduct.fulfilled, (state, action) => {
+      .addCase(deleteProduct.fulfilled, (state) => {
         state.loading = false;
-        state.error = action.payload as string;
       })
       .addCase(deleteProduct.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteProduct.rejected, (state) => {
+      .addCase(deleteProduct.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

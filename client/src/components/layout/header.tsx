@@ -1,8 +1,38 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
 import CartIcon from '@/features/pages/market/component/shoppingCart';
-
+import { useAppDispatch, useAppSelector } from '@/app/stores/stores';
+import Swal from 'sweetalert2';
+import { logout } from '@/app/stores/auth/slice';
 export const Header = () => {
+  const dispatch = useAppDispatch();
+  const countItemsCart = useAppSelector(
+    (state) => state.cart.items.cartItems?.length || 0
+  );
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    Swal.fire({
+      title: 'Anda yakin ingin keluar?',
+      text: 'Akun Anda akan logout dan Anda harus login kembali untuk mengakses.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, keluar',
+      cancelButtonText: 'Batal',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(logout());
+        Swal.fire({
+          title: 'Logout Berhasil',
+          text: 'Anda telah berhasil keluar.',
+          icon: 'success',
+        });
+        navigate('/login');
+      }
+    });
+  };
+
   return (
     <div className="flex justify-between items-center mb-8 mx-4">
       {/* Logo */}
@@ -49,7 +79,14 @@ export const Header = () => {
           </Button>
         </NavLink>
 
-        <NavLink
+        <Button
+          onClick={handleLogout}
+          variant="ghost"
+          className="text-lg font-black"
+        >
+          Logout
+        </Button>
+        {/* <NavLink
           to="/logout"
           className={({ isActive }) =>
             isActive
@@ -57,17 +94,11 @@ export const Header = () => {
               : 'text-white text-lg font-black'
           }
         >
-          <Button
-            variant="ghost"
-            className="text-lg font-black"
-          >
-            Logout
-          </Button>
-        </NavLink>
+        </NavLink> */}
       </div>
       <Link to="/cart">
         <div className="">
-          <CartIcon itemCount={6} />
+          <CartIcon itemCount={countItemsCart} />
         </div>
       </Link>
     </div>

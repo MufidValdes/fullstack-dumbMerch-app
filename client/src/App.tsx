@@ -9,7 +9,7 @@ function App() {
   React.useEffect(() => {
     dispatch(checkAuth());
   }, []);
-  console.log('check', checkAuth);
+  // console.log('check', checkAuth);
 
   return <AppRouter />;
 }

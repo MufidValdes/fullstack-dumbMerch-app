@@ -1,8 +1,7 @@
 import { api } from '@/app/api/apiconfig';
-import { ProductFormInputs } from '@/features/pages/Product/page';
 import { IProduct } from '@/types/product';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import toast from 'react-hot-toast';
+import Swal from 'sweetalert2';
 
 export const getProduct = createAsyncThunk(
   'product/getAll',
@@ -14,7 +13,10 @@ export const getProduct = createAsyncThunk(
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
-        toast.error(error.message);
+        Swal.fire({
+          title: error.message,
+          icon: 'error',
+        });
         return thunkAPI.rejectWithValue(error.message);
       }
     }
@@ -23,7 +25,7 @@ export const getProduct = createAsyncThunk(
 
 export const createProduct = createAsyncThunk(
   'product/create',
-  async (data: IProduct, thunkAPI) => {
+  async (data: FormData, thunkAPI) => {
     try {
       const res = await api.post('/product', data);
       console.log(res.data);
@@ -31,7 +33,10 @@ export const createProduct = createAsyncThunk(
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
-        toast.error(error.message);
+        Swal.fire({
+          title: error.message,
+          icon: 'error',
+        });
         return thunkAPI.rejectWithValue(error.message);
       }
     }
@@ -48,7 +53,10 @@ export const updateProduct = createAsyncThunk(
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
-        toast.error(error.message);
+        Swal.fire({
+          title: error.message,
+          icon: 'error',
+        });
         return thunkAPI.rejectWithValue(error.message);
       }
     }
@@ -65,7 +73,10 @@ export const deleteProduct = createAsyncThunk(
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
-        toast.error(error.message);
+        Swal.fire({
+          title: error.message,
+          icon: 'error',
+        });
         return thunkAPI.rejectWithValue(error.message);
       }
     }

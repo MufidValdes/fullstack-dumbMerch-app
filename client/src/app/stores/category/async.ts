@@ -1,8 +1,7 @@
 import { api } from '@/app/api/apiconfig';
 import { ICategories } from '@/types/categories';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import toast from 'react-hot-toast';
-
+import Swal from 'sweetalert2';
 export const getCategories = createAsyncThunk(
   'categories/getAll',
   async (_, thunkAPI) => {
@@ -13,7 +12,10 @@ export const getCategories = createAsyncThunk(
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
-        toast.error(error.message);
+        Swal.fire({
+          title: error.message,
+          icon: 'error',
+        });
         return thunkAPI.rejectWithValue(error.message);
       }
     }
@@ -30,7 +32,10 @@ export const addCategories = createAsyncThunk(
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
-        toast.error(error.message);
+        Swal.fire({
+          title: error.message,
+          icon: 'error',
+        });
         return thunkAPI.rejectWithValue(error.message);
       }
     }
@@ -47,7 +52,10 @@ export const updateCategories = createAsyncThunk(
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
-        toast.error(error.message);
+        Swal.fire({
+          title: error.message,
+          icon: 'error',
+        });
         return thunkAPI.rejectWithValue(error.message);
       }
     }
@@ -64,7 +72,10 @@ export const deleteCategories = createAsyncThunk(
     } catch (error) {
       console.log(error);
       if (error instanceof Error) {
-        toast.error(error.message);
+        Swal.fire({
+          title: error.message,
+          icon: 'error',
+        });
         return thunkAPI.rejectWithValue(error.message);
       }
     }
