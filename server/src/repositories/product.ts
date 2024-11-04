@@ -8,11 +8,12 @@ import prisma from '@utils/prisma.client';
 
 // Membuat kategori baru
 export const createProduct = async (data: ProductDTO) => {
-  const { images, reviews, stock, categoryId, ...dataProduct } = data;
+  const { images, reviews, stock, categoryId, price, ...dataProduct } = data;
 
   return prisma.products.create({
     data: {
       ...dataProduct,
+      price: +price,
       stock: +stock,
       categoryId: +categoryId,
     },
@@ -57,7 +58,7 @@ export const updateProduct = async (
   productId: number,
   data: UpdateProductDTO
 ) => {
-  const { images, reviews, category, ...dataProduct } = data;
+  const { images, reviews, category, price, ...dataProduct } = data;
 
   // Cari gambar produk lama di database
   const existingImages = await prisma.productImages.findMany({
@@ -66,7 +67,10 @@ export const updateProduct = async (
 
   return prisma.products.update({
     where: { id: productId },
-    data: dataProduct,
+    data: {
+      ...dataProduct,
+      price: +price,
+    },
   });
 };
 export async function deleteProduct(productId: number) {

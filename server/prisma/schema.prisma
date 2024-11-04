@@ -48,10 +48,14 @@ model Users {
   password String
   role     Role    @default(USER)
 
-  profile Profiles?
-  token   Token[]
-  orders  Orders[]
-  reviews Reviews[]
+  profile      Profiles?
+  token        Token[]
+  orders       Orders[]
+  reviews      Reviews[]
+  Cart         Cart?
+  chatRooms    ChatRooms[]
+  adminRooms   ChatRooms[]    @relation("AdminRoom")
+  chatMessages ChatMessages[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -99,8 +103,9 @@ model Products {
   orderItems   OrderItems[]
   images       ProductImages[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  cartItems CartItems[]
 
   @@map("products")
 }
@@ -184,6 +189,67 @@ model Reviews {
 
 // NEXT FITURE
 // Cart: Fitur untuk mengelola produk yang ingin dibeli pengguna sebelum melakukan pembayaran.
+model Cart {
+  id     Int   @id @default(autoincrement())
+  user   Users @relation(fields: [userId], references: [id])
+  userId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cartItems CartItems[]
+
+  @@unique([userId])
+  @@map("cart")
+}
+
+model CartItems {
+  id        Int      @id @default(autoincrement())
+  cart      Cart     @relation(fields: [cartId], references: [id])
+  cartId    Int
+  product   Products @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int      @default(1)
+  price     Decimal
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cartId, productId])
+  @@map("cart_items")
+}
+
 // Wishlist: Fitur untuk menyimpan daftar produk yang diinginkan pengguna.
 // Payment: Mengelola status pembayaran dan riwayat transaksi.
 // Shipping: Mengelola detail pengiriman dan status pengiriman.
+
+// chat
+// ChatRooms: Menyimpan informasi tentang room chat antara admin dan user.
+model ChatRooms {
+  id        Int            @id @default(autoincrement())
+  userId    Int
+  adminId   Int? // Nullable if admin hasn't joined the room
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  messages  ChatMessages[]
+
+  user  Users  @relation(fields: [userId], references: [id])
+  admin Users? @relation("AdminRoom", fields: [adminId], references: [id])
+
+  @@unique([userId, adminId])
+  @@map("chat_rooms")
+}
+
+// ChatMessages: Menyimpan pesan yang dikirim oleh pengguna atau admin dalam room tertentu.
+model ChatMessages {
+  id        Int      @id @default(autoincrement())
+  roomId    Int // ID room tempat pesan dikirim
+  senderId  Int // ID pengirim pesan (user atau admin)
+  message   String // Isi pesan
+  createdAt DateTime @default(now())
+
+  room   ChatRooms @relation(fields: [roomId], references: [id])
+  sender Users     @relation(fields: [senderId], references: [id])
+
+  @@map("chat_messages")
+}
