@@ -5,12 +5,6 @@ import { authentication } from '@src/middlewares/auth.middleware';
 const OrderRouter = Router();
 
 /**
- * @Route POST api/orders
- * @Desc Create a new order
- */
-OrderRouter.post('/', authentication, orderController.createOrder);
-
-/**
  * @Route GET api/orders
  * @Desc Get all orders for the authenticated user
  */
@@ -22,4 +16,19 @@ OrderRouter.get('/', authentication, orderController.getUserOrders);
  */
 OrderRouter.get('/:orderId', authentication, orderController.getOrderDetails);
 
+// OrderRouter.put('/', authentication, orderController.cancelOrder);
+// OrderRouter.put('/', authentication, orderController.updatePaymentStatus);
+
+OrderRouter.post(
+  '/checkout',
+  authentication,
+  orderController.createOrderFromCart
+);
+
+OrderRouter.get('/:orderId/shipping', orderController.getShippingDetails);
+OrderRouter.post('/:orderId/shipping', orderController.addShippingDetails);
+OrderRouter.put('/:orderId/shipping', orderController.updateShippingDetails);
+
 export default OrderRouter;
+
+// src/routes/order.routes.ts

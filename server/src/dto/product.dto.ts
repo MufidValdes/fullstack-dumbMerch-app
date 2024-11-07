@@ -1,11 +1,10 @@
-import { Decimal } from '@prisma/client/runtime/library';
 import { CategoryDTO } from './category.dto';
 
 export interface ProductDTO {
   id: number;
   product_name: string;
   description: string;
-  price: Decimal;
+  price: number;
   stock: number;
   categoryId: number;
   images: ProductImageDTO[];
@@ -20,7 +19,7 @@ export interface UpdateProductDTO {
   id: number;
   product_name: string;
   description: string;
-  price: Decimal;
+  price: number;
   stock: number;
   category: CategoryDTO;
   categoryId: number;

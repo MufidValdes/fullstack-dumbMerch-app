@@ -1,27 +1,8 @@
 import { Request, Response } from 'express';
 import * as orderService from '@services/order.service';
-
-export async function createOrder(req: Request, res: Response) {
-  // #swagger.tags = ['Order']
-  // #swagger.description = 'Create a new order'
-  /**
-   #swagger.parameters['body'] = {
-     in: 'body',
-     description: 'Order details',
-     schema: {
-       $ref: '#/definitions/Order'
-     }
-   }
-  */
-  // try {
-  //   const orderData: OrderDTO = req.body;
-  //   const userId = (req as any).user.id; // Assuming user authentication middleware
-  //   const newOrder = await orderService.createOrder(orderData);
-  //   res.status(201).json(newOrder);
-  // } catch (error) {
-  //   res.status(500).json({ error: 'Error creating order', details: error });
-  // }
-}
+import { PaymentStatus, OrderStatus } from '@prisma/client';
+import prisma from '@src/utils/prisma.client';
+import { ShippingDetailsDTO } from '@src/dto/order.dto';
 
 export async function getUserOrders(req: Request, res: Response) {
   // #swagger.tags = ['Order']
@@ -55,5 +36,130 @@ export async function getOrderDetails(req: Request, res: Response) {
     res
       .status(500)
       .json({ error: 'Error fetching order details', details: error });
+  }
+}
+
+export async function updatePaymentStatus(req: Request, res: Response) {
+  try {
+    const { orderId } = req.params;
+    const paymentStatus: PaymentStatus = req.body.paymentStatus;
+    const updatedOrder = await orderService.updatePaymentStatus(+orderId, {
+      paymentStatus,
+    });
+    res.json(updatedOrder);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: 'Error updating payment status', details: error });
+  }
+}
+
+export async function cancelOrder(req: Request, res: Response) {
+  try {
+    const { orderId } = req.params;
+    const cancelledOrder = await orderService.updateOrderStatus(+orderId, {
+      orderStatus: OrderStatus.CANCELED,
+    });
+    res.json(cancelledOrder);
+  } catch (error) {
+    res.status(500).json({ error: 'Error canceling order', details: error });
+  }
+}
+
+export const createOrderFromCart = async (req: Request, res: Response) => {
+  try {
+    const userId = res.locals.user.id;
+    // Ambil cart dan item terkait
+    const cart = await prisma.cart.findUnique({
+      where: { userId },
+      include: { cartItems: true },
+    });
+
+    if (!cart || cart.cartItems.length === 0) {
+      res.status(400).json({ message: 'Cart is empty' });
+      return;
+    }
+
+    // Hitung total harga dari item di cart
+    const totalAmount = cart?.cartItems.reduce((sum, item) => {
+      return sum + Number(item.price) * item.quantity;
+    }, 0);
+
+    // Buat order dan item terkait
+    const order = await prisma.orders.create({
+      data: {
+        userId,
+        totalAmount,
+        orderItems: {
+          create: cart?.cartItems.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+        },
+      },
+    });
+
+    // Kosongkan Cart setelah dibuat Order
+    await prisma.cart.update({
+      where: { userId },
+      data: {
+        cartItems: {
+          deleteMany: {}, // Hapus semua item dalam cart
+        },
+      },
+    });
+
+    res.status(201).json(order);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Error creating order from cart' });
+  }
+};
+
+export async function addShippingDetails(req: Request, res: Response) {
+  try {
+    const { orderId } = req.params;
+    const shippingData: ShippingDetailsDTO = req.body;
+    const shippingDetails = await orderService.createShippingDetails(
+      +orderId,
+      shippingData
+    );
+    res.status(201).json(shippingDetails);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: 'Error adding shipping details', details: error });
+  }
+}
+
+export async function updateShippingDetails(req: Request, res: Response) {
+  try {
+    const { orderId } = req.params;
+    const shippingData: ShippingDetailsDTO = req.body;
+    const updatedDetails = await orderService.updateShippingDetails(
+      +orderId,
+      shippingData
+    );
+    res.json(updatedDetails);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: 'Error updating shipping details', details: error });
+  }
+}
+
+export async function getShippingDetails(req: Request, res: Response) {
+  try {
+    const { orderId } = req.params;
+    const shippingDetails = await orderService.getShippingDetails(+orderId);
+    res.json(shippingDetails);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: 'Error fetching shipping details', details: error });
   }
 }

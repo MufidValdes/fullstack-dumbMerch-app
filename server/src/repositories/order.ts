@@ -1,40 +1,26 @@
-import { OrderStatus } from '@prisma/client';
 import {
   CreateOrderDTO,
+  ShippingDetailsDTO,
   UpdateOrderStatusDTO,
   UpdatePaymentStatusDTO,
 } from '@src/dto/order.dto';
 import prisma from '@utils/prisma.client';
 
-export async function createOrder(data: CreateOrderDTO) {
-  return prisma.orders.create({
-    data: {
-      userId: data.userId,
-      paymentMethod: data.paymentMethod,
-      totalAmount: data.orderItems.reduce(
-        (total, item) => total + item.price.toNumber() * item.quantity,
-        0
-      ), // Calculate based on items
-      paymentStatus: 'PENDING',
-      orderStatus: 'PENDING',
-      shippingDetails: {
-        create: data.shippingDetails,
-      },
-      orderItems: {
-        create: data.orderItems,
-      },
-    },
-    include: {
-      shippingDetails: true,
-      orderItems: true,
-    },
-  });
-}
-
 export async function getUserOrders(userId: number) {
   return prisma.orders.findMany({
     where: { userId },
-    include: { orderItems: true },
+    include: {
+      orderItems: {
+        include: {
+          product: {
+            include: {
+              images: true,
+            },
+          },
+        },
+      },
+      shippingDetails: true,
+    },
   });
 }
 
@@ -82,5 +68,37 @@ export async function updatePaymentStatus(
 export async function deleteOrder(orderId: number) {
   return await prisma.orders.delete({
     where: { id: orderId },
+  });
+}
+
+export async function createShippingDetails(
+  orderId: number,
+  data: ShippingDetailsDTO
+) {
+  return prisma.shippingDetails.create({
+    data: {
+      orderId,
+      address: data.address,
+      city: data.city,
+      postalCode: data.postalCode,
+      country: data.country,
+      phone: data.phone,
+    },
+  });
+}
+
+export async function updateShippingDetails(
+  orderId: number,
+  data: ShippingDetailsDTO
+) {
+  return prisma.shippingDetails.update({
+    where: { orderId },
+    data,
+  });
+}
+
+export async function getShippingDetails(orderId: number) {
+  return prisma.shippingDetails.findUnique({
+    where: { orderId },
   });
 }

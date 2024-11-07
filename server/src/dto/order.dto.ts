@@ -1,10 +1,9 @@
 // src/dto/order.dto.ts
 
 import { OrderStatus, PaymentStatus } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime/library';
 
 export interface CreateOrderDTO {
-  userId: number;
+  userId?: number;
   paymentMethod: string;
   shippingDetails: ShippingDetailsDTO;
   orderItems: OrderItemDTO[];
@@ -19,7 +18,7 @@ export interface UpdatePaymentStatusDTO {
 export interface OrderItemDTO {
   productId: number;
   quantity: number;
-  price: Decimal;
+  price: number;
 }
 
 export interface ShippingDetailsDTO {

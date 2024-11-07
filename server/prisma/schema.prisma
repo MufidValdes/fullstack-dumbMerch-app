@@ -144,6 +144,7 @@ model Orders {
   paymentMethod   String?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
+  payments        Payments?
 
   @@map("orders")
 }
@@ -221,6 +222,22 @@ model CartItems {
 
 // Wishlist: Fitur untuk menyimpan daftar produk yang diinginkan pengguna.
 // Payment: Mengelola status pembayaran dan riwayat transaksi.
+model Payments {
+  id                Int           @id @default(autoincrement())
+  order             Orders        @relation(fields: [order_id], references: [id])
+  order_id          Int           @unique
+  paymentType       String?
+  transactionId     String?
+  gross_amount      Int
+  transactionStatus String        @default("PENDING")
+  paymentStatus     PaymentStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payments")
+}
+
 // Shipping: Mengelola detail pengiriman dan status pengiriman.
 
 // chat
