@@ -16,36 +16,42 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
+import { Gender, IUserProfile } from '@/types/users';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { RiEdit2Fill } from 'react-icons/ri';
-import ProfileInfo from './component/profile-info';
-import { TransactionCard } from './component/transaction-card';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { IUserProfile } from '@/types/users';
+import { RiEdit2Fill } from 'react-icons/ri';
+import Swal from 'sweetalert2';
+import ProfileInfo from './component/profile-info';
+import { fetchUserOrders } from '@/app/stores/order/async';
+import { Separator } from '@/components/ui/separator';
+import { formatToIDR } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+import { Link } from 'react-router-dom';
 
 const ProfilePage = () => {
-  const transactions: any[] = [
-    /* array data transaksi */
-  ];
   const dispatch = useAppDispatch();
   const { profile, loading, error } = useAppSelector((state) => state.profile);
   const user = useAppSelector((state) => state.auth.user);
+  const orders = useAppSelector((state) => state.orders.orders);
   const { register, handleSubmit, reset } = useForm<IUserProfile>({
     defaultValues: {
       fullname: '',
       phone: '',
-      gender: 'MALE',
       address: '',
     },
   });
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
-
+  const [open, setOpen] = React.useState(false);
   useEffect(() => {
     dispatch(getProfile());
+    dispatch(fetchUserOrders());
   }, [dispatch]);
+  useEffect(() => {
+    console.log('Orders: ', orders); // Log data untuk memeriksa isi orders
+  }, [orders]);
 
   useEffect(() => {
     if (profile) {
@@ -53,20 +59,30 @@ const ProfilePage = () => {
       setPreviewAvatar(profile.avatar || '/default-avatar.png');
     }
   }, [profile, reset]);
-
   const onSubmit = async (data: IUserProfile) => {
     const formData = new FormData();
     formData.append('fullname', data.fullname);
     formData.append('address', data.address);
-    formData.append('gender', data.gender);
+    // Validasi nilai gender sebelum mengirim ke backend
+    // const genderValue = data.gender === Gender.FEMALE ? 'FEMALE' : 'MALE';
+    formData.append('gender', data.gender as unknown as string);
+
     formData.append('phone', data.phone.toString());
 
+    // console.log(formData.append('gender', data.gender));
     if (avatarFile) {
       formData.append('avatar', avatarFile); // Tambahkan file avatar jika ada
     }
 
-    await dispatch(updateProfile(formData));
+    const res = await dispatch(updateProfile(formData));
     dispatch(getProfile());
+    if (updateProfile.fulfilled.match(res)) {
+      Swal.fire({
+        title: 'Update Success!',
+        icon: 'success',
+      });
+      setOpen(false);
+    }
   };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,7 +117,10 @@ const ProfilePage = () => {
             <div className="sm:flex gap-4 ml-4">
               {/* Profile Details */}
               <Card className="w-auto sm:w-[400px] lg:w-[300px] h-[340px] lg:h-[400px]">
-                <Dialog>
+                <Dialog
+                  open={open}
+                  onOpenChange={setOpen}
+                >
                   <DialogTrigger asChild>
                     <Button
                       className="float-end border-none"
@@ -188,10 +207,14 @@ const ProfilePage = () => {
                               >
                                 Gender
                               </Label>
-                              <RadioGroup defaultValue="MALE">
+                              <RadioGroup
+                                defaultValue={
+                                  profile.gender as unknown as string
+                                }
+                              >
                                 <div className="flex items-center space-x-2">
                                   <RadioGroupItem
-                                    value="FEMALE"
+                                    value={Gender.FEMALE as unknown as string}
                                     id="r1"
                                     {...register('gender')}
                                   />
@@ -199,7 +222,7 @@ const ProfilePage = () => {
                                 </div>
                                 <div className="flex items-center space-x-2">
                                   <RadioGroupItem
-                                    value="MALE"
+                                    value={Gender.MALE as unknown as string}
                                     id="r2"
                                     {...register('gender')}
                                   />
@@ -236,10 +259,7 @@ const ProfilePage = () => {
                   </DialogContent>
                 </Dialog>
                 <img
-                  src={
-                    'https://wallpapercave.com/wp/wp13357407.jpg' ||
-                    profile.avatar
-                  }
+                  src={profile.avatar}
                   alt="Profile"
                   className="rounded-lg w-full h-[90%] md:h-[300px] lg:h-[360px] object-cover "
                 />
@@ -260,7 +280,7 @@ const ProfilePage = () => {
                 />
                 <ProfileInfo
                   label="Gender"
-                  value={profile.gender}
+                  value={profile.gender as unknown as string}
                 />
                 <ProfileInfo
                   label="Address"
@@ -271,20 +291,95 @@ const ProfilePage = () => {
           </div>
 
           {/* Transaction Section */}
-          <div className="space-y-4 relative w-full  h-[420px] overflow-hidden ">
+          <div className="space-y-4 relative w-full h-[420px] overflow-hidden">
             <div className="sticky top-0 bg-black z-10 sm:mt-12">
               <h2 className="text-2xl text-red-500 font-black">
-                My Transaction
+                My Transactions
               </h2>
             </div>
-            {/* Adjust height to account for the header */}
-            <div className="flex flex-col overflow-y-auto h-[calc(100%-80px)] w-[395px] space-y-2 ml-4">
-              {transactions.map((transaction, index) => (
-                <TransactionCard
-                  key={index}
-                  transaction={transaction}
-                />
-              ))}
+            <div className="h-[320px] overflow-y-auto">
+              {orders.length > 0 ? (
+                orders.map((order) => (
+                  <>
+                    <Card
+                      key={order.userId}
+                      className="bg-gray-800/50 border-none text-white p-4 mb-4 rounded-lg"
+                    >
+                      <div className="flex gap-2 pb-1">
+                        <p className="text-md font-semibold">
+                          Order ID: {order.id}
+                        </p>
+                        <Badge className="bg-red-500">
+                          Waiting For Payment
+                        </Badge>
+                      </div>
+                      <Separator className="border-t my-2" />
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="text-sm text-red-500">
+                            Status:
+                            <Badge className="bg-red-500 text-white mx-2">
+                              {order.orderStatus}
+                            </Badge>
+                          </p>
+                          <span className="text-sm text-white">
+                            Total Amount:
+                            <Badge>{formatToIDR(order.totalAmount)}</Badge>
+                          </span>
+                        </div>
+                        <div className="text-sm text-end space-y-1">
+                          <p className="text-white">
+                            Date:{' '}
+                            {new Date(order.createdAt).toLocaleDateString()}
+                          </p>
+                          <Link to={`/orders/${order.id}`}>
+                            <button className="bg-red-500 rounded-md p-1">
+                              Payment Now
+                            </button>
+                          </Link>
+                        </div>
+                      </div>
+                      <Separator className="border-t my-2" />
+                      <div className="">
+                        <h4 className="text-md font-semibold mb-2">
+                          Order Items:
+                        </h4>
+                        {order.orderItems.map((item) => (
+                          <div
+                            key={item.id}
+                            className="flex justify-between items-center mb-2"
+                          >
+                            <img
+                              src={item.product.images[0]?.imageUrl}
+                              alt={item.product.product_name}
+                              className="w-20 h-20 object-cover rounded-lg"
+                            />
+                            <div className="flex-1 ml-4">
+                              <p className="font-bold">
+                                {item.product.product_name}
+                              </p>
+                              <p className="text-sm">
+                                Quantity: {item.quantity}
+                              </p>
+                              <p className="text-sm">
+                                Price: {formatToIDR(item.price)}
+                              </p>
+                            </div>
+                            <p className="text-sm">
+                              Subtotal:{' '}
+                              {formatToIDR(item.quantity * Number(item.price))}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </Card>
+                  </>
+                ))
+              ) : (
+                <p className="text-center text-red-500 mt-4">
+                  No transactions found.
+                </p>
+              )}
             </div>
           </div>
         </div>

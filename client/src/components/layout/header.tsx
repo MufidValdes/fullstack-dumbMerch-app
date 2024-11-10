@@ -7,7 +7,7 @@ import { logout } from '@/app/stores/auth/slice';
 export const Header = () => {
   const dispatch = useAppDispatch();
   const countItemsCart = useAppSelector(
-    (state) => state.cart.items.cartItems?.length || 0
+    (state) => state.cart.items?.cartItems?.length || 0
   );
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -82,7 +82,7 @@ export const Header = () => {
         <Button
           onClick={handleLogout}
           variant="ghost"
-          className="text-lg font-black"
+          className="text-lg font-black text-white"
         >
           Logout
         </Button>

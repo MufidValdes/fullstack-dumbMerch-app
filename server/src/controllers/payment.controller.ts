@@ -39,3 +39,13 @@ export async function handlePaymentNotification(req: Request, res: Response) {
     res.status(500).json({ message: (error as Error).message });
   }
 }
+
+export async function getPayment(req: Request, res: Response) {
+  try {
+    const response = await paymentService.getPayment();
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: (error as Error).message });
+  }
+}

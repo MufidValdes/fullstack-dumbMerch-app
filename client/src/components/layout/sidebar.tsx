@@ -14,6 +14,8 @@ import { IconType } from 'react-icons';
 import { useAppDispatch } from '@/app/stores/stores';
 import { logout } from '@/app/stores/auth/slice';
 import Swal from 'sweetalert2';
+import { useEffect } from 'react';
+import { getProfile } from '@/app/stores/profile/async';
 export interface LinkItemProps {
   icon: IconType;
   routelink: string;
@@ -47,6 +49,9 @@ function Sidebar({ icons, avatarSrc }: SidebarProps) {
       }
     });
   };
+  useEffect(() => {
+    dispatch(getProfile());
+  }, [dispatch]);
   return (
     <aside className="w-16 bg-black p-4 flex flex-col items-center justify-between">
       {/* Bagian ikon navigasi */}

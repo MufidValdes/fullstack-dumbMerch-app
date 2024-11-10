@@ -14,7 +14,7 @@ export interface ICartItemEntities {
   cartId: number;
   productId: number;
   quantity: number;
-  price: string;
+  price: number;
   product: IProduct;
 }
 

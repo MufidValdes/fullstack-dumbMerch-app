@@ -23,11 +23,14 @@ export default function LoginPage() {
   const user = useAppSelector((state) => state.auth.user);
 
   const handleLoginSubmit = async (data: LoginData) => {
-    await dispatch(LoginAsync(data));
-    Swal.fire({
-      title: 'Login Success!',
-      icon: 'success',
-    });
+    const res = await dispatch(LoginAsync(data));
+    if (LoginAsync.fulfilled.match(res)) {
+      Swal.fire({
+        title: 'Login Success!',
+        icon: 'success',
+      });
+    }
+
     dispatch(checkAuth());
     // navigate('/');
   };

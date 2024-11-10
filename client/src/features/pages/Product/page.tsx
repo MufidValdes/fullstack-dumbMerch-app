@@ -21,6 +21,15 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { getCategories } from '@/app/stores/category/async';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { ICategories } from '@/types/categories';
 
 export type ProductFormInputs = {
   product_name: string;
@@ -35,16 +44,19 @@ export type ProductFormInputs = {
 const ProductPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const categories = useAppSelector((state) => state.categories.categories);
   const { Products, loading, error } = useAppSelector((state) => state.product);
   const avatar = useAppSelector((state) => state.profile.profile.avatar);
 
-  const { register, handleSubmit, reset, watch } = useForm<ProductFormInputs>();
+  const { register, handleSubmit, reset, setValue, watch } =
+    useForm<ProductFormInputs>();
   console.log(watch('images'));
   const [previewImages, setPreviewImages] = useState<string[]>([]);
 
   const selectedImages = watch('images');
 
   useEffect(() => {
+    dispatch(getCategories());
     dispatch(getProduct());
   }, [dispatch]);
 
@@ -182,7 +194,31 @@ const ProductPage = () => {
                             className="col-span-3"
                           />
                         </div>
+                        {/* Category ID Field with Select */}
                         <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="categoryId">Category</Label>
+                          <Select
+                            onValueChange={(value) =>
+                              setValue('categoryId', parseInt(value))
+                            }
+                          >
+                            <SelectTrigger className="col-span-3">
+                              <SelectValue placeholder="Select a category" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-white">
+                              {categories.map((category: ICategories) => (
+                                <SelectItem
+                                  key={category.id}
+                                  value={category.id.toString()}
+                                >
+                                  {category.category_name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* <div className="grid grid-cols-4 items-center gap-4">
                           <Label htmlFor="categoryId">Category ID</Label>
                           <Input
                             id="categoryId"
@@ -191,7 +227,7 @@ const ProductPage = () => {
                             {...register('categoryId')}
                             className="col-span-3"
                           />
-                        </div>
+                        </div> */}
                         <div className="grid grid-cols-4 items-center gap-4">
                           <Label htmlFor="images">Images</Label>
                           <Input

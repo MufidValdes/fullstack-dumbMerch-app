@@ -1,41 +1,78 @@
 // chat.service.ts
 
-import prisma from '@utils/prisma.client';
-import { ChatRooms, ChatMessages, Users, Role } from '@prisma/client';
+import prisma from '@src/utils/prisma.client';
 
-class ChatService {
-  async createRoom(userId: number): Promise<ChatRooms> {
-    const admin = await prisma.users.findFirst({ where: { role: Role.ADMIN } });
-    if (!admin) throw new Error('No admin available');
+const chatService = {
+  async getActiveUsers() {
+    try {
+      // Mengambil daftar pengguna aktif dari database (misalnya, user yang memiliki sesi aktif)
+      const activeUsers = await prisma.chatRooms.findMany({
+        select: {
+          roomId: true, // Mengambil roomId unik
+          userId: true, // Mengambil ID pengguna
+        },
+      });
+      return activeUsers; // Kembalikan array pengguna aktif beserta roomId mereka
+    } catch (error) {
+      console.error('Error fetching active users:', error);
+      throw new Error('Could not fetch active users');
+    }
+  },
 
-    return await prisma.chatRooms.upsert({
-      where: { userId_adminId: { userId, adminId: admin.id } },
-      create: { userId, adminId: admin.id },
-      update: {},
+  // Fungsi lain yang dibutuhkan pada chat service
+  async getUserById(userId: number) {
+    return await prisma.users.findUnique({
+      where: { id: +userId },
     });
-  }
+  },
 
-  async saveMessage(
-    roomId: number,
-    senderId: number,
-    message: string
-  ): Promise<ChatMessages> {
-    return await prisma.chatMessages.create({
-      data: { roomId, senderId, message },
+  async createRoom(roomId: number, userId: number) {
+    // Membuat room baru atau mengambil room yang sudah ada untuk user tertentu
+    const existingRoom = await prisma.chatRooms.findUnique({
+      where: { roomId },
     });
-  }
 
-  async getRoomMessages(roomId: number): Promise<ChatMessages[]> {
+    if (existingRoom) {
+      return existingRoom; // Kembalikan room yang sudah ada
+    }
+
+    // Jika room belum ada, buat room baru untuk pengguna
+    return await prisma.chatRooms.create({
+      data: { roomId, userId },
+    });
+  },
+
+  async getRoomMessages(roomId: number) {
     return await prisma.chatMessages.findMany({
       where: { roomId },
       orderBy: { createdAt: 'asc' },
-      take: 50, // Limit pesan yang diambil untuk meningkatkan performa
     });
-  }
+  },
 
-  async getUserById(userId: number): Promise<Users | null> {
-    return await prisma.users.findUnique({ where: { id: userId } });
-  }
-}
+  async saveMessage(roomId: number, senderId: number, message: string) {
+    // Cek apakah room dengan roomId tertentu ada
+    const roomExists = await prisma.chatRooms.findUnique({
+      where: { roomId },
+    });
 
-export default new ChatService();
+    if (!roomExists) {
+      throw new Error(`Room with ID ${roomId} does not exist.`);
+    }
+
+    return await prisma.chatMessages.create({
+      data: {
+        roomId,
+        senderId,
+        message,
+      },
+    });
+  },
+  async getRoomByRoomId(roomId: number) {
+    // Mendapatkan room berdasarkan userId
+    return await prisma.chatRooms.findUnique({
+      where: { roomId },
+    });
+  },
+};
+
+export default chatService;

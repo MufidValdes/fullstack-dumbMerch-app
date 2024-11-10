@@ -21,26 +21,29 @@ export default function ComplaisnPage() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const adminId = '7'; // Admin's ID
-  const clientUserId = '1'; // Client's user ID for the room (this would ideally be dynamic)
+  const adminId = '1'; // Admin's ID
+  const clientUserId = '2'; // Client's user ID for the room (this would ideally be dynamic)
 
   useEffect(() => {
     // Connect to the Socket.IO server
     const socketConnection = io('http://localhost:3000', {
-      query: { adminId },
+      query: { userId: adminId },
     });
     setSocket(socketConnection);
 
-    // Listen for events from the server
-    socketConnection.on('roomJoined', (data) => {
-      console.log('Admin joined room:', data.roomId);
+    socketConnection.on('connected', ({ rooms }) => {
+      console.log('Rooms available:', rooms);
+    });
+
+    socketConnection.on('switchedRoom', ({ roomId }) => {
+      console.log('Switched to room:', roomId);
     });
 
     socketConnection.on('previousMessages', (prevMessages: Message[]) => {
       setMessages(prevMessages);
     });
 
-    socketConnection.on('newMessage', (message: Message) => {
+    socketConnection.on('receiveChats', (message: Message) => {
       setMessages((prev) => [...prev, message]);
     });
 
@@ -49,14 +52,20 @@ export default function ComplaisnPage() {
     };
   }, []);
 
-  // Send message handler
+  const handleSwitchRoom = (targetUserId: string) => {
+    if (socket) {
+      socket.emit('switchRoom', targetUserId);
+    }
+  };
+
   const handleSendMessage = () => {
     if (socket && input.trim()) {
       const messageData = {
-        roomId: `room-${clientUserId}-${adminId}`,
+        roomId: `${clientUserId}${adminId}`,
         message: input,
+        userId: parseInt(adminId),
       };
-      socket.emit('sendMessage', messageData);
+      socket.emit('sendChat', messageData);
       setMessages((prev) => [
         ...prev,
         { senderId: parseInt(adminId), message: input },
@@ -64,7 +73,6 @@ export default function ComplaisnPage() {
       setInput('');
     }
   };
-
   return (
     <div className="flex h-screen bg-gray-900 text-white">
       {/* Sidebar */}
@@ -83,7 +91,6 @@ export default function ComplaisnPage() {
             transition={{ duration: 0.5 }}
             className="max-w-5xl mx-auto"
           >
-            <Header />
             <Separator
               orientation="horizontal"
               className="bg-[#6A6A6A]/30 h-1"

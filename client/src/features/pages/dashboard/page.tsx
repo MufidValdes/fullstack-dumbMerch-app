@@ -1,15 +1,24 @@
 import { MoreHorizontal } from 'lucide-react';
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
+import { FetchAllPaymentAsync } from '@/app/stores/payment/async';
+import { useAppSelector } from '@/app/stores/stores';
 import Navbar from '@/components/layout/navbar';
 import Sidebar, { LinkItemProps } from '@/components/layout/sidebar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useEffect } from 'react';
 import { FaCartPlus, FaHome } from 'react-icons/fa';
-import { TbCategoryPlus, TbMessageReportFilled } from 'react-icons/tb';
+import {
+  TbCategoryPlus,
+  TbMessageReportFilled,
+  TbPigMoney,
+} from 'react-icons/tb';
+import { useDispatch } from 'react-redux';
 import { StatsCard } from './component/statsCard';
 import { StatusTable } from './component/statusTable';
-import { useAppSelector } from '@/app/stores/stores';
+import { TransactionTable } from '../transaction/component/transaction_table';
+import { fetchUsers } from '@/app/stores/admin/async';
 
 const invoiceData = [
   { date: '04 Jul', quotation: 5, approval: 20 },
@@ -23,7 +32,7 @@ const invoiceData = [
 const statusRows = [
   {
     id: 'KYRFQ0001',
-    vendor: 'Bell Gardens',
+    costumer_name: 'Bell Gardens',
     contact: '+91 700 838 1259',
     date: '03/03/2023',
     status: 'Pending',
@@ -31,7 +40,7 @@ const statusRows = [
   },
   {
     id: 'KYRFQ0002',
-    vendor: 'Bell Gardens',
+    costumer_name: 'Bell Gardens',
     contact: '+91 700 838 1259',
     date: '03/03/2023',
     status: 'Approved',
@@ -43,10 +52,18 @@ export const NavIcons: Array<LinkItemProps> = [
   { icon: TbMessageReportFilled, routelink: '/admin-complain' },
   { icon: TbCategoryPlus, routelink: '/category' },
   { icon: FaCartPlus, routelink: '/product' },
+  { icon: TbPigMoney, routelink: '/transaction' },
 ];
 
 export default function Dashboard() {
+  const dispatch = useDispatch();
   const avatar = useAppSelector((state) => state.profile.profile.avatar);
+  const payment = useAppSelector((state) => state.payment.pay);
+  const users = useAppSelector((state) => state.auth.admin);
+  useEffect(() => {
+    dispatch(fetchUsers());
+    dispatch(FetchAllPaymentAsync());
+  }, [dispatch]);
   return (
     <div className="flex h-screen bg-gray-900 text-white">
       {/* sidebar */}
@@ -135,8 +152,16 @@ export default function Dashboard() {
           </div>
 
           {/* Status Table */}
-          <StatusTable rows={statusRows} />
+          <Card className="col-span-2 bg-gray-800 border-gray-700 text-white">
+            <CardHeader>
+              <CardTitle className="text-lg font-medium">Transaction</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <TransactionTable payment={payment} />
+            </CardContent>
+          </Card>
 
+          <StatusTable users={users!} />
           {/* Invoice Donut Chart */}
           <Card className="bg-gray-800 border-gray-700 text-white">
             <CardHeader>

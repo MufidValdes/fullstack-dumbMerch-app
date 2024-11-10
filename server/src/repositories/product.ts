@@ -50,6 +50,7 @@ export const getProductById = async (id: number) => {
     include: {
       reviews: true,
       category: true,
+      images: true,
     },
   });
 };
@@ -58,7 +59,7 @@ export const updateProduct = async (
   productId: number,
   data: UpdateProductDTO
 ) => {
-  const { images, reviews, category, price, ...dataProduct } = data;
+  const { images, reviews, category, price, stock, ...dataProduct } = data;
 
   // Cari gambar produk lama di database
   const existingImages = await prisma.productImages.findMany({
@@ -70,6 +71,7 @@ export const updateProduct = async (
     data: {
       ...dataProduct,
       price: +price,
+      stock: +stock,
     },
   });
 };
@@ -82,6 +84,14 @@ export async function deleteProduct(productId: number) {
   // Kemudian hapus produk dari tabel `products`
   return await prisma.products.delete({
     where: { id: productId },
+  });
+}
+
+export async function deleteProductImage(imageId: number) {
+  await prisma.productImages.deleteMany({
+    where: {
+      id: imageId,
+    },
   });
 }
 

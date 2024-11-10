@@ -1,15 +1,18 @@
 import { Iuser } from '@/types/users';
 import { createSlice } from '@reduxjs/toolkit';
 import { LoginAsync, RegisterAsync, checkAuth } from './async';
+import { fetchUsers } from '../admin/async';
 
 export interface AuthState {
   token: string;
   user?: Iuser;
+  admin?: Iuser[];
   loading: boolean;
 }
 const initialstate: AuthState = {
   token: '',
   user: undefined,
+  admin: undefined,
   loading: false,
 };
 const authSlice = createSlice({
@@ -53,6 +56,16 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(checkAuth.rejected, (state) => {
+        state.loading = false;
+      });
+    builder
+      .addCase(fetchUsers.fulfilled, (state, action) => {
+        state.admin = action.payload;
+      })
+      .addCase(fetchUsers.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchUsers.rejected, (state) => {
         state.loading = false;
       });
   },

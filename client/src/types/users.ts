@@ -4,10 +4,15 @@ export interface Iuser {
   email: string;
   profile: IUserProfile;
   role: 'USER' | 'ADMIN';
+  createdAt?: string;
 }
 export enum Roles {
   USER,
   ADMIN,
+}
+export enum Gender {
+  FEMALE,
+  MALE,
 }
 
 export interface IUserProfile {
@@ -15,6 +20,7 @@ export interface IUserProfile {
   fullname: string;
   phone: string;
   address: string;
+  // gender: Gender;
   gender: string;
   avatar?: string;
   user: {

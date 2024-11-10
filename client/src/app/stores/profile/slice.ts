@@ -1,6 +1,11 @@
 import { IUserProfile } from '@/types/users';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { createProfile, deleteProfile, getProfile } from './async';
+import {
+  createProfile,
+  deleteProfile,
+  getProfile,
+  updateProfile,
+} from './async';
 
 interface ProfileState {
   profile: IUserProfile;
@@ -50,15 +55,15 @@ const ProfileSlice = createSlice({
       });
 
     // builder
-    //   .addCase(updateprofile.fulfilled, (state, action) => {
+    //   .addCase(updateProfile.fulfilled, (state, action) => {
     //     state.loading = false;
     //     state.error = action.payload as string;
     //   })
-    //   .addCase(updateprofile.pending, (state) => {
+    //   .addCase(updateProfile.pending, (state) => {
     //     state.loading = true;
     //     state.error = null;
     //   })
-    //   .addCase(updateprofile.rejected, (state) => {
+    //   .addCase(updateProfile.rejected, (state) => {
     //     state.loading = false;
     //   });
 

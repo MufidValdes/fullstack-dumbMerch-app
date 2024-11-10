@@ -4,6 +4,8 @@ import categoryReducer from './category/slice';
 import productReducer from './product/slice';
 import profileReducer from './profile/slice';
 import cartReducer from './cart/slice';
+import paymentReducer from './payment/slice';
+import orderReducer from './order/slice';
 import { useDispatch, useSelector } from 'react-redux';
 
 export const store = configureStore({
@@ -13,6 +15,8 @@ export const store = configureStore({
     product: productReducer,
     profile: profileReducer,
     cart: cartReducer,
+    payment: paymentReducer,
+    orders: orderReducer,
   },
 });
 

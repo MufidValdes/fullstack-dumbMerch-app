@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/header';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@radix-ui/react-separator';
 import { motion } from 'framer-motion';
+import { useAppSelector } from '@/app/stores/stores';
 
 // Define the type for a message
 type Message = {
@@ -17,20 +18,18 @@ const users = {
 };
 
 export default function CustomerServicePage() {
+  const userId = useAppSelector((state) => state.auth.user?.id);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
-  const userId = '1'; // Change this to the actual user ID
-  const adminId = '7'; // Fixed admin ID as per server logic
+  const adminId = '1';
 
   useEffect(() => {
-    // Connect to the Socket.IO server
     const socketConnection = io('http://localhost:3000', {
       query: { userId },
     });
     setSocket(socketConnection);
 
-    // Listen for events from the server
     socketConnection.on('roomJoined', (data) => {
       console.log('Joined room:', data.roomId);
     });
@@ -39,27 +38,24 @@ export default function CustomerServicePage() {
       setMessages(prevMessages);
     });
 
-    socketConnection.on('newMessage', (message: Message) => {
-      setMessages((prev) => [...prev, message]);
-    });
+    // socketConnection.on('receiveChats', (message: Message) => {
+    //   setMessages((prev) => [...prev, message]);
+    // });
 
     return () => {
       socketConnection.disconnect();
     };
-  }, []);
+  }, [userId]);
 
-  // Send message handler
   const handleSendMessage = () => {
     if (socket && input.trim()) {
       const messageData = {
-        roomId: `room-${userId}-${adminId}`,
+        roomId: `${userId}${adminId}`,
         message: input,
+        userId: +userId!,
       };
-      socket.emit('sendMessage', messageData);
-      setMessages((prev) => [
-        ...prev,
-        { senderId: parseInt(userId), message: input },
-      ]);
+      socket.emit('sendChat', messageData);
+      setMessages((prev) => [...prev, { senderId: +userId!, message: input }]);
       setInput('');
     }
   };
@@ -108,12 +104,12 @@ export default function CustomerServicePage() {
                   <div
                     key={index}
                     className={`flex ${
-                      msg.senderId === parseInt(userId)
+                      msg.senderId === +userId!
                         ? 'justify-end'
                         : 'justify-start'
                     } gap-2`}
                   >
-                    {msg.senderId !== parseInt(userId) && (
+                    {msg.senderId !== +userId! && (
                       <Avatar>
                         <AvatarImage
                           src={users.avatar}
@@ -125,14 +121,14 @@ export default function CustomerServicePage() {
                     )}
                     <div
                       className={`p-3 rounded-lg max-w-[75%] ${
-                        msg.senderId === parseInt(userId)
+                        msg.senderId === +userId!
                           ? 'bg-[#212121] text-white'
                           : 'bg-gray-800 text-white'
                       }`}
                     >
                       {msg.message}
                     </div>
-                    {msg.senderId === parseInt(userId) && (
+                    {msg.senderId === +userId! && (
                       <Avatar>
                         <AvatarImage
                           src={users.avatar}

@@ -3,6 +3,7 @@ import { LoginSchema } from '@/features/auth/login/schema/loginSchema';
 import { RegisterSchema } from '@/features/auth/register/schema/registerSchema';
 import { Iuser } from '@/types/users';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 export const RegisterAsync = createAsyncThunk<void, RegisterSchema>(
@@ -47,8 +48,8 @@ export const LoginAsync = createAsyncThunk<string, LoginSchema>(
           title: error.message,
           icon: 'error',
         });
-        return thunkAPI.rejectWithValue(error.message);
       }
+      return thunkAPI.rejectWithValue((error as Error).message);
     }
   }
 );
@@ -71,6 +72,7 @@ export const checkAuth = createAsyncThunk<
       title: error.message,
       icon: 'error',
     });
+    localStorage.removeItem('token');
     return thunkAPI.rejectWithValue(error.message);
   }
 });

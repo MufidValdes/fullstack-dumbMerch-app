@@ -1,13 +1,13 @@
 import app from '@src/app';
-import chatHandler from '@src/socket/chatHandler';
-import SocketServer from '@src/socket/socketServer';
 import prisma from './src/utils/prisma.client';
-import http from 'http';
+import { Server as httpServer } from 'http';
+import SocketServer from '@src/socket/socketServer';
+import chatHandler from '@src/socket/chatHandler';
 // Load environment variables
 require('dotenv').config();
 
 const port = process.env.PORT || 3000;
-const server = http.createServer(app);
+const server = new httpServer(app);
 // Inisialisasi instance socket server
 const io = SocketServer.init(server);
 
@@ -20,7 +20,12 @@ process.on('SIGINT', async () => {
   process.exit();
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
   console.log(`Swagger Docs available on http://localhost:${port}/api-docs`);
+
+  console.log('Server is running on port 3000');
 });
+// =============================
+// app.listen(port, () => {
+// });

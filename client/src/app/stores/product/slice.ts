@@ -1,6 +1,11 @@
 import { IProduct } from '@/types/product';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { createProduct, deleteProduct, getProduct } from './async';
+import {
+  createProduct,
+  deleteImageProduct,
+  deleteProduct,
+  getProduct,
+} from './async';
 
 interface ProductState {
   Products: IProduct[];
@@ -48,7 +53,12 @@ const ProductSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       });
-
+    builder.addCase(deleteImageProduct.fulfilled, (state, action) => {
+      const imageId = action.payload;
+      state.Products.forEach((product) => {
+        product.images = product.images.filter((img) => img.id !== imageId);
+      });
+    });
     // builder
     //   .addCase(updateProduct.fulfilled, (state, action) => {
     //     state.loading = false;

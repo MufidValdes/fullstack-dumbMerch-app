@@ -3,50 +3,25 @@ import {
   removeCartItem,
   updateCartItem,
 } from '@/app/stores/cart/async';
+import { checkoutCart } from '@/app/stores/order/async';
 import { useAppDispatch, useAppSelector } from '@/app/stores/stores';
 import { Header } from '@/components/layout/header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { formatToIDR } from '@/lib/utils';
 import { ICartItemDTO } from '@/types/cart';
 import { motion } from 'framer-motion';
 import { Minus, Plus, ShoppingCart, X } from 'lucide-react';
 import { useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-// interface CartItem {
-//   id: number;
-//   name: string;
-//   price: number;
-//   quantity: number;
-//   image: string;
-// }
 
+// Note
+// Payment Method
 export default function CartPage() {
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.items);
 
-  // const [cartItems, setCartItems] = useState<CartItem[]>([
-  //   {
-  //     id: 1,
-  //     name: 'Quantum Processor',
-  //     price: 999.99,
-  //     quantity: 1,
-  //     image: '/placeholder.svg?height=80&width=80',
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'Holo Display',
-  //     price: 599.99,
-  //     quantity: 2,
-  //     image: '/placeholder.svg?height=80&width=80',
-  //   },
-  //   {
-  //     id: 3,
-  //     name: 'Neural Interface',
-  //     price: 1299.99,
-  //     quantity: 1,
-  //     image: '/placeholder.svg?height=80&width=80',
-  //   },
-  // ]);
   useEffect(() => {
     dispatch(getCart());
   }, [dispatch]);
@@ -56,18 +31,15 @@ export default function CartPage() {
       id,
       quantity,
     };
-    // setCartItems((items) =>
-    //   items.map((item) =>
-    //     item.id === id ? { ...item, quantity: Math.max(0, newQuantity) } : item
-    //   )
-    // );
+    if (quantity <= 0) {
+      handleRemoveItem(id);
+      return;
+    }
+
     await dispatch(updateCartItem(data));
     dispatch(getCart());
   };
 
-  // const handleRemoveItem = (id: number) => {
-  //   setCartItems((items) => items.filter((item) => item.id !== id));
-  // };
   const handleRemoveItem = (id: number) => {
     Swal.fire({
       title: 'Are you sure?',
@@ -89,11 +61,26 @@ export default function CartPage() {
       }
     });
   };
+  const handleCheckout = async () => {
+    try {
+      const order = await dispatch(checkoutCart()).unwrap();
+      Swal.fire({
+        title: 'Order Created!',
+        text: 'Your order has been successfully placed.',
+        icon: 'success',
+      });
+      if (order) {
+        return <Navigate to={`/orders/${order.id}`} />;
+      }
+    } catch (error) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Failed to place order.',
+        icon: 'error',
+      });
+    }
+  };
 
-  // const total = cartItems.reduce(
-  //   (sum, item) => sum + item.price * item.quantity,
-  //   0
-  // );
   const total =
     cartItems?.cartItems?.reduce(
       (sum, item) => sum + Number(item.price) * item.quantity,
@@ -131,10 +118,7 @@ export default function CartPage() {
                         {item.product.product_name}
                       </h3>
                       <p className="text-sm text-gray-400">
-                        $
-                        {item.price
-                          ? parseFloat(item.price).toFixed(2)
-                          : '0.00'}
+                        {formatToIDR(item.price)}
                       </p>
                     </div>
                   </div>
@@ -187,10 +171,13 @@ export default function CartPage() {
               <div className="flex justify-between items-center mb-4">
                 <span className="text-lg font-semibold">Total</span>
                 <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
-                  ${total.toFixed(2)}
+                  {formatToIDR(total)}
                 </span>
               </div>
-              <Button className="w-full bg-gradient-to-r from-blue-400 to-purple-600 hover:from-blue-600 hover:to-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105">
+              <Button
+                onClick={handleCheckout}
+                className="w-full bg-gradient-to-r from-blue-400 to-purple-600 hover:from-blue-600 hover:to-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105"
+              >
                 <ShoppingCart className="mr-2 h-5 w-5" />
                 Checkout
               </Button>

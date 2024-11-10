@@ -6,7 +6,10 @@ class SocketServer {
   public static init(server: any): Server {
     if (!SocketServer.instance) {
       SocketServer.instance = new Server(server, {
-        cors: { origin: '*' },
+        cors: {
+          origin: '*',
+          methods: ['GET', 'POST'],
+        },
       });
     }
     return SocketServer.instance;

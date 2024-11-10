@@ -20,7 +20,11 @@ ProductRouter.put(
   productController.updateProduct
 );
 ProductRouter.delete('/:id', authentication, productController.deleteProduct);
-
+ProductRouter.delete(
+  '/images/:imageId',
+  authentication,
+  productController.deleteImageProduct
+);
 ProductRouter.post('/:id/review', authentication, productController.addReview);
 ProductRouter.get(
   '/:id/review',

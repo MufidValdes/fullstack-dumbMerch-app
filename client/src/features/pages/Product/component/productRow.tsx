@@ -2,6 +2,7 @@ import { deleteProduct, getProduct } from '@/app/stores/product/async';
 import { useAppDispatch } from '@/app/stores/stores';
 import { Button } from '@/components/ui/button';
 import { TableRow, TableCell } from '@/components/ui/table';
+import { formatToIDR } from '@/lib/utils';
 import { IProduct } from '@/types/product';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -37,7 +38,7 @@ const ProductRow: React.FC<ProductProps> = ({ product, index }) => {
         </TableCell>
         <TableCell>{product.product_name}</TableCell>
         <TableCell>{product.description}</TableCell>
-        <TableCell>{product.price}</TableCell>
+        <TableCell>{formatToIDR(product.price)}</TableCell>
         <TableCell>{product.stock}</TableCell>
         <TableCell className="text-right space-x-2 flex justify-end">
           <Link to={`/product/${product.id}`}>

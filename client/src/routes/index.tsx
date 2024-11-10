@@ -14,6 +14,8 @@ import ProductEditPage from '@/features/pages/Product/EditPage';
 import CartPage from '@/features/pages/cart/page';
 import ProfileAdminPage from '@/features/pages/profile/pageAdmin';
 import ComplainPage from '@/features/pages/customerService/adminPage';
+import OrderPage from '@/features/pages/order/page';
+import TransactionPage from '@/features/pages/transaction/page';
 export function AppRouter() {
   const router = createBrowserRouter([
     {
@@ -24,6 +26,10 @@ export function AppRouter() {
       path: '/register',
       element: <RegisterPage />,
     },
+    // {
+    //   path: '/chat/:userId',
+    //   element: <ChatPage />,
+    // },
     {
       element: <ProtectedRoute role={'USER'} />,
       children: [
@@ -46,6 +52,10 @@ export function AppRouter() {
         {
           path: '/cart',
           element: <CartPage />,
+        },
+        {
+          path: '/orders/:orderId',
+          element: <OrderPage />,
         },
       ],
     },
@@ -75,6 +85,10 @@ export function AppRouter() {
         {
           path: '/admin-profile',
           element: <ProfileAdminPage />,
+        },
+        {
+          path: '/transaction',
+          element: <TransactionPage />,
         },
         {
           path: '/admin-complain',

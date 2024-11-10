@@ -47,6 +47,10 @@ export async function deleteProduct(productId: number) {
   return productRepository.deleteProduct(productId);
 }
 
+export async function deleteProductImage(imageId: number) {
+  return productRepository.deleteProductImage(imageId);
+}
+
 export async function addReview(data: CreateReviewDTO) {
   return productRepository.addReview(data);
 }

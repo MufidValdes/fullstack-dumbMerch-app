@@ -1,8 +1,9 @@
 // src/components/ui/ProductCard.tsx
-import { addToCart } from '@/app/stores/cart/async';
+import { addToCart, getCart } from '@/app/stores/cart/async';
 import { useAppDispatch } from '@/app/stores/stores';
 import { Button } from '@/components/ui/button';
 import { Card, CardFooter } from '@/components/ui/card';
+import { formatToIDR } from '@/lib/utils';
 import { IProduct } from '@/types/product';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -23,6 +24,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           title: `${product.product_name} berhasil ditambahkan kedalam keranjang`,
           icon: 'success',
         });
+        dispatch(getCart());
       })
       .catch(() => {
         Swal.fire({
@@ -48,8 +50,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <h3 className="text-red-500 text-[15px] font-semibold">
                 {product.product_name}
               </h3>
-              <p className="text-white text-[14px]">{product.price}</p>
-              <p className="text-red-500 text-[14px]">{product.stock}</p>
+              <p className="text-white text-[14px]">
+                {formatToIDR(product.price)}
+              </p>
+              <p className="text-red-500 text-[14px]">
+                Stock : {product.stock}
+              </p>
             </div>
           </CardFooter>
         </Card>

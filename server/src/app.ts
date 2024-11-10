@@ -11,6 +11,7 @@ import ProductRouter from './routes/product.router';
 import ProfileRouter from './routes/profile.router';
 import ReviewRouter from './routes/review.router';
 import PaymentRouter from './routes/payment.router';
+import usersRouter from './routes/user.router';
 const app: Express = express();
 
 app.use(express.json());
@@ -30,5 +31,5 @@ app.use('/api/reviews', ReviewRouter);
 app.use('/api/profile', ProfileRouter);
 app.use('/api/chat', ChatRouter);
 app.use('/api/payment', PaymentRouter);
-
+app.use('/api/users', usersRouter);
 export default app;

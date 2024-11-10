@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/app/stores/stores';
 import { useEffect } from 'react';
 import { getProduct, updateProduct } from '@/app/stores/product/async';
 import { useProductForm } from './hooks/useProductForm';
+import { FaTrash } from 'react-icons/fa';
 
 const ProductEditPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,14 +20,23 @@ const ProductEditPage = () => {
     state.product.Products.find((c) => c.id === Number(id))
   );
 
-  const { formData, images, handleChange, handleImageChange, setFormData } =
-    useProductForm({
-      id: product?.id || 0,
-      product_name: product?.product_name || '',
-      description: product?.description || '',
-      price: product?.price || 0,
-      stock: product?.stock || 0,
-    });
+  const {
+    formData,
+    images: uploadedImages,
+    handleChange,
+    handleImageChange,
+    setFormData,
+    removeImage,
+    deletedImageIds,
+    handleDeleteExistingImage,
+  } = useProductForm({
+    id: product?.id || 0,
+    product_name: product?.product_name || '',
+    description: product?.description || '',
+    price: product?.price || 0,
+    stock: product?.stock || 0,
+    initialImages: product?.images || [],
+  });
 
   useEffect(() => {
     if (!product) {
@@ -38,13 +48,19 @@ const ProductEditPage = () => {
 
   const handleSave = () => {
     if (product) {
+      // Filter out deleted images and add new images
+      const finalImages = [
+        ...product.images.filter((img) => !deletedImageIds.includes(img.id)),
+        ...uploadedImages,
+      ];
+
       dispatch(
         updateProduct({
           ...formData,
-          images,
-          // images: images.length > 0 ? images : product.images, // Menggunakan gambar yang ada jika tidak ada yang diunggah
+          images: finalImages,
         })
       );
+      dispatch(getProduct());
     }
     navigate('/product');
   };
@@ -62,6 +78,56 @@ const ProductEditPage = () => {
             <h2 className="text-2xl mb-4 text-red-500 font-black">
               Edit Product
             </h2>
+
+            {/* Display Existing Images */}
+            <div className="flex gap-4 mb-4 flex-wrap">
+              {product?.images
+                .filter((img) => !deletedImageIds.includes(img.id))
+                .map((img) => (
+                  <div
+                    key={img.id}
+                    className="relative"
+                  >
+                    <img
+                      src={img.imageUrl}
+                      alt="Existing Product"
+                      className="w-32 h-32 object-cover rounded-md"
+                    />
+                    <button
+                      onClick={() => handleDeleteExistingImage(img.id)}
+                      className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                      aria-label="Remove Image"
+                    >
+                      <FaTrash className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+            </div>
+
+            {/* Display Uploaded Images */}
+            <div className="flex gap-4 mb-4 flex-wrap">
+              {uploadedImages.length > 0 &&
+                uploadedImages.map((img, index) => (
+                  <div
+                    key={index}
+                    className="relative"
+                  >
+                    <img
+                      src={img.imageUrl}
+                      alt="Product"
+                      className="w-32 h-32 object-cover rounded-md"
+                    />
+                    <button
+                      onClick={() => removeImage(index)}
+                      className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                      aria-label="Remove Image"
+                    >
+                      <FaTrash className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+            </div>
+
             <div className="flex flex-col w-full max-w-[100%] gap-8">
               <div className="flex items-center gap-1.5">
                 <Input

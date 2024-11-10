@@ -90,6 +90,17 @@ export async function deleteProduct(req: Request, res: Response) {
   }
 }
 
+export async function deleteImageProduct(req: Request, res: Response) {
+  try {
+    const imageId = +req.params.imageId;
+    const response = await productService.deleteProductImage(imageId);
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'error deleted Image product', error });
+  }
+}
+
 export async function addReview(req: Request, res: Response) {
   try {
     const data: CreateReviewDTO = req.body;

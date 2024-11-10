@@ -3,11 +3,11 @@ import chatService from '@src/services/chat.service';
 
 class ChatController {
   async createRoom(req: Request, res: Response) {
-    // const { userId } = req.body;
+    const { roomId } = req.body;
     const userId = res.locals.user.id;
 
     try {
-      const room = await chatService.createRoom(userId);
+      const room = await chatService.createRoom(roomId, userId);
       res.status(200).json({ roomId: room.id });
     } catch (error) {
       console.log(error);

@@ -82,3 +82,22 @@ export const deleteProduct = createAsyncThunk(
     }
   }
 );
+export const deleteImageProduct = createAsyncThunk(
+  'product/image/delete',
+  async (imageId: number, thunkAPI) => {
+    try {
+      const res = await api.delete(`/product/images/${imageId}`);
+      console.log(res.data);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        Swal.fire({
+          title: error.message,
+          icon: 'error',
+        });
+        return thunkAPI.rejectWithValue(error.message);
+      }
+    }
+  }
+);

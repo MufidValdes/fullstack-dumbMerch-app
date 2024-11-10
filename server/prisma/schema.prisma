@@ -68,7 +68,7 @@ model Profiles {
   fullname String?
   phone    String?
   address  String?
-  gender   Gender?
+  gender   Gender? @default(MALE)
   avatar   String?
 
   user   Users @relation(fields: [userId], references: [id])
@@ -95,7 +95,7 @@ model Products {
   id           Int             @id @default(autoincrement())
   product_name String
   description  String?
-  price        Decimal
+  price        Int
   stock        Int
   category     Categories      @relation(fields: [categoryId], references: [id])
   categoryId   Int
@@ -137,7 +137,7 @@ model Orders {
   user            Users            @relation(fields: [userId], references: [id])
   userId          Int
   orderItems      OrderItems[]
-  totalAmount     Decimal          @default(0)
+  totalAmount     Int              @default(0)
   paymentStatus   PaymentStatus    @default(PENDING)
   orderStatus     OrderStatus      @default(PENDING)
   shippingDetails ShippingDetails?
@@ -167,7 +167,7 @@ model OrderItems {
   product   Products @relation(fields: [productId], references: [id])
   productId Int
   quantity  Int
-  price     Decimal
+  price     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -211,7 +211,7 @@ model CartItems {
   product   Products @relation(fields: [productId], references: [id])
   productId Int
   quantity  Int      @default(1)
-  price     Decimal
+  price     Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -223,14 +223,17 @@ model CartItems {
 // Wishlist: Fitur untuk menyimpan daftar produk yang diinginkan pengguna.
 // Payment: Mengelola status pembayaran dan riwayat transaksi.
 model Payments {
-  id                Int           @id @default(autoincrement())
-  order             Orders        @relation(fields: [order_id], references: [id])
-  order_id          Int           @unique
-  paymentType       String?
-  transactionId     String?
-  gross_amount      Int
-  transactionStatus String        @default("PENDING")
-  paymentStatus     PaymentStatus @default(PENDING)
+  id                  Int     @id @default(autoincrement())
+  order               Orders  @relation(fields: [order_id], references: [id])
+  order_id            Int     @unique
+  order_transactionId String?
+  transaction_token   String?
+  transaction_status  String  @default("PENDING")
+  payment_type        String?
+  redirect_url        String?
+
+  gross_amount  Int
+  paymentStatus PaymentStatus @default(PENDING)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -245,6 +248,7 @@ model Payments {
 model ChatRooms {
   id        Int            @id @default(autoincrement())
   userId    Int
+  roomId    Int            @unique
   adminId   Int? // Nullable if admin hasn't joined the room
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
@@ -265,7 +269,7 @@ model ChatMessages {
   message   String // Isi pesan
   createdAt DateTime @default(now())
 
-  room   ChatRooms @relation(fields: [roomId], references: [id])
+  room   ChatRooms @relation(fields: [roomId], references: [roomId])
   sender Users     @relation(fields: [senderId], references: [id])
 
   @@map("chat_messages")

@@ -24,6 +24,7 @@ const categorySlice = createSlice({
         state.loading = true;
         state.error = null;
       })
+
       .addCase(
         getCategories.fulfilled,
         (state, action: PayloadAction<ICategories[]>) => {
