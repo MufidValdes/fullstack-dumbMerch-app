@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -r tsconfig-paths/register server.ts",
-    "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "build": "prisma generate && npx tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "start": "ts-node -r tsconfig-paths/register server.ts",
     "swagger": "ts-node ./src/utils/swaggerDoc.ts",
-    "test": "ts-mocha -r ts-node/register ./src/test/**/*.test.ts"
+    "test": "ts-mocha -r ts-node/register ./src/test/**/*.test.ts",
+    "postinstall": "prisma generate"
   },
   "prisma": {
     "seed": "ts-node ./prisma/seed.ts"
