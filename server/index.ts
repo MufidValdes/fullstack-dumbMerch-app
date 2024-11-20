@@ -1,4 +1,4 @@
-import app from '@src/app';
+import app from './src/app';
 import prisma from './src/utils/prisma.client';
 import { Server as httpServer } from 'http';
 import SocketServer from '@src/socket/socketServer';
