@@ -73,7 +73,7 @@ export const addShippingDetails = createAsyncThunk(
     {
       orderId,
       shippingDetails,
-    }: { orderId: string; shippingDetails: ShippingDetails },
+    }: { orderId: any; shippingDetails: ShippingDetails },
     { rejectWithValue }
   ) => {
     try {

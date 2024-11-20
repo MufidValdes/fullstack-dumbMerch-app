@@ -6,7 +6,7 @@ export interface IProduct {
   stock: number;
   categoryId: number;
   orderItems?: OrderItems;
-  images: ProductImages[];
+  images: ProductImages[] | any[];
 }
 
 export interface OrderItems {

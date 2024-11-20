@@ -5,6 +5,7 @@ import {
   deleteImageProduct,
   deleteProduct,
   getProduct,
+  updateProduct,
 } from './async';
 
 interface ProductState {
@@ -59,18 +60,18 @@ const ProductSlice = createSlice({
         product.images = product.images.filter((img) => img.id !== imageId);
       });
     });
-    // builder
-    //   .addCase(updateProduct.fulfilled, (state, action) => {
-    //     state.loading = false;
-    //     state.error = action.payload as string;
-    //   })
-    //   .addCase(updateProduct.pending, (state) => {
-    //     state.loading = true;
-    //     state.error = null;
-    //   })
-    //   .addCase(updateProduct.rejected, (state) => {
-    //     state.loading = false;
-    //   });
+    builder
+      .addCase(updateProduct.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(updateProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
 
     builder
       .addCase(deleteProduct.fulfilled, (state) => {

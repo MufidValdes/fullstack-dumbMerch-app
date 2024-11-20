@@ -1,11 +1,6 @@
 import { IUserProfile } from '@/types/users';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import {
-  createProfile,
-  deleteProfile,
-  getProfile,
-  updateProfile,
-} from './async';
+import { createProfile, deleteProfile, getProfile } from './async';
 
 interface ProfileState {
   profile: IUserProfile;

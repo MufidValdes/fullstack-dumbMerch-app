@@ -2,7 +2,7 @@ import { MoreHorizontal } from 'lucide-react';
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
 import { FetchAllPaymentAsync } from '@/app/stores/payment/async';
-import { useAppSelector } from '@/app/stores/stores';
+import { useAppDispatch, useAppSelector } from '@/app/stores/stores';
 import Navbar from '@/components/layout/navbar';
 import Sidebar, { LinkItemProps } from '@/components/layout/sidebar';
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,6 @@ import {
   TbMessageReportFilled,
   TbPigMoney,
 } from 'react-icons/tb';
-import { useDispatch } from 'react-redux';
 import { StatsCard } from './component/statsCard';
 import { StatusTable } from './component/statusTable';
 import { TransactionTable } from '../transaction/component/transaction_table';
@@ -29,24 +28,7 @@ const invoiceData = [
   { date: '09 Jul', quotation: 5, approval: 15 },
   { date: '10 Jul', quotation: 8, approval: 20 },
 ];
-const statusRows = [
-  {
-    id: 'KYRFQ0001',
-    costumer_name: 'Bell Gardens',
-    contact: '+91 700 838 1259',
-    date: '03/03/2023',
-    status: 'Pending',
-    statusColor: 'red',
-  },
-  {
-    id: 'KYRFQ0002',
-    costumer_name: 'Bell Gardens',
-    contact: '+91 700 838 1259',
-    date: '03/03/2023',
-    status: 'Approved',
-    statusColor: 'green',
-  },
-];
+
 export const NavIcons: Array<LinkItemProps> = [
   { icon: FaHome, routelink: '/dashboard' },
   { icon: TbMessageReportFilled, routelink: '/admin-complain' },
@@ -56,7 +38,7 @@ export const NavIcons: Array<LinkItemProps> = [
 ];
 
 export default function Dashboard() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const avatar = useAppSelector((state) => state.profile.profile.avatar);
   const payment = useAppSelector((state) => state.payment.pay);
   const users = useAppSelector((state) => state.auth.admin);

@@ -1,15 +1,15 @@
+import { getProduct, updateProduct } from '@/app/stores/product/async';
+import { useAppDispatch, useAppSelector } from '@/app/stores/stores';
 import Navbar from '@/components/layout/navbar';
 import Sidebar from '@/components/layout/sidebar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useEffect } from 'react';
+import { FaTrash } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { NavIcons } from '../dashboard/page';
-import { useAppDispatch, useAppSelector } from '@/app/stores/stores';
-import { useEffect } from 'react';
-import { getProduct, updateProduct } from '@/app/stores/product/async';
 import { useProductForm } from './hooks/useProductForm';
-import { FaTrash } from 'react-icons/fa';
 
 const ProductEditPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -46,23 +46,31 @@ const ProductEditPage = () => {
     }
   }, [dispatch, product, setFormData]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    // Buat FormData untuk mengirimkan data
     if (product) {
-      // Filter out deleted images and add new images
-      const finalImages = [
-        ...product.images.filter((img) => !deletedImageIds.includes(img.id)),
-        ...uploadedImages,
-      ];
+      const formData = new FormData();
+      formData.append('product_name', product.product_name);
+      formData.append('description', product.description);
+      formData.append('price', product.price.toString());
+      formData.append('stock', product.stock.toString());
 
-      dispatch(
-        updateProduct({
-          ...formData,
-          images: finalImages,
-        })
-      );
-      dispatch(getProduct());
+      // Tambahkan gambar baru
+      uploadedImages.forEach((image: any, index) => {
+        if (image.file) {
+          formData.append(`images`, image.file);
+        }
+      });
+
+      try {
+        // Lakukan request ke backend
+        await dispatch(updateProduct({ id: product?.id!, formData }));
+        dispatch(getProduct());
+        navigate('/product');
+      } catch (error) {
+        console.error('Error uploading product:', error);
+      }
     }
-    navigate('/product');
   };
 
   return (

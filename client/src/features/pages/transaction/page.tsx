@@ -1,26 +1,17 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import {
-  Search,
-  Calendar,
-  Filter,
-  Download,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react';
-import { format } from 'date-fns';
-import Sidebar from '@/components/layout/sidebar';
-import { NavIcons } from '../dashboard/page';
-import Navbar from '@/components/layout/navbar';
-import { useAppSelector } from '@/app/stores/stores';
-import { useDispatch } from 'react-redux';
 import { FetchAllPaymentAsync } from '@/app/stores/payment/async';
+import { useAppDispatch, useAppSelector } from '@/app/stores/stores';
+import Navbar from '@/components/layout/navbar';
+import Sidebar from '@/components/layout/sidebar';
+import { motion } from 'framer-motion';
+import { Calendar, Download, Filter, Search } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { NavIcons } from '../dashboard/page';
 import { TransactionTable } from './component/transaction_table';
 
 export default function TransactionPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const payment = useAppSelector((state) => state.payment.pay);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(FetchAllPaymentAsync());
   }, [dispatch]);

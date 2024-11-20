@@ -9,7 +9,7 @@ import Sidebar from '@/components/layout/sidebar';
 import { NavIcons } from '../dashboard/page';
 const ProfileAdminPage = () => {
   const dispatch = useAppDispatch();
-  const { profile, loading, error } = useAppSelector((state) => state.profile);
+  const { profile } = useAppSelector((state) => state.profile);
   const user = useAppSelector((state) => state.auth.user);
   useEffect(() => {
     dispatch(getProfile());

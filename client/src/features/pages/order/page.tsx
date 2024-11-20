@@ -3,7 +3,7 @@ import {
   fetchOrderDetails,
 } from '@/app/stores/order/async';
 import { addpayment } from '@/app/stores/payment/async';
-import { useAppSelector } from '@/app/stores/stores';
+import { useAppDispatch, useAppSelector } from '@/app/stores/stores';
 import { Header } from '@/components/layout/header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -27,13 +27,12 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaChevronRight } from 'react-icons/fa';
 import { RiEdit2Fill } from 'react-icons/ri';
-import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { TransactionCard } from '../profile/component/transaction-card';
 
 export default function OrderPage() {
   const { orderId } = useParams<{ orderId: string }>();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const orders = useAppSelector((state) =>
     state.orders.orders.find((c) => c.id === Number(orderId))
   );
@@ -60,7 +59,7 @@ export default function OrderPage() {
           gross_amount: +total!,
         };
         // Dispatch payment action to initiate payment and get redirect URL
-        const resultAction = await dispatch(addpayment(paymentData)); // Use .unwrap() to get the action payload directly if using Redux Toolkit
+        const resultAction = dispatch(addpayment(paymentData)); // Use .unwrap() to get the action payload directly if using Redux Toolkit
 
         // If the payment creation was successful
         if (addpayment.fulfilled.match(resultAction)) {
@@ -69,7 +68,10 @@ export default function OrderPage() {
           // Redirect user to the Midtrans payment page
           window.location.href = redirectUrl;
         } else {
-          console.error('Failed to create payment:', resultAction.payload);
+          console.error(
+            'Failed to create payment:',
+            (await resultAction).payload
+          );
         }
       }
     } catch (error) {
@@ -90,9 +92,9 @@ export default function OrderPage() {
   const closeShippingModal = () => {
     setIsShippingModalOpen(false);
   };
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     if (orders) {
-      await dispatch(
+      dispatch(
         addShippingDetails({ orderId: Number(orderId), shippingDetails: data })
       );
       reset();

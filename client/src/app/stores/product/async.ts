@@ -1,5 +1,4 @@
 import { api } from '@/app/api/apiconfig';
-import { IProduct } from '@/types/product';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import Swal from 'sweetalert2';
 
@@ -45,9 +44,9 @@ export const createProduct = createAsyncThunk(
 
 export const updateProduct = createAsyncThunk(
   'product/update',
-  async ({ id, ...data }: IProduct, thunkAPI) => {
+  async ({ id, formData }: { id: number; formData: FormData }, thunkAPI) => {
     try {
-      const res = await api.put(`/product/${id}`, data);
+      const res = await api.put(`/product/${id}`, formData);
       console.log(res.data);
       return res.data;
     } catch (error) {

@@ -39,8 +39,9 @@ const PaymentSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(addpayment.fulfilled, (state) => {
+      .addCase(addpayment.fulfilled, (state, action) => {
         state.loading = false;
+        state.pay = action.payload;
       })
       .addCase(addpayment.rejected, (state, action) => {
         state.loading = false;

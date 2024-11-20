@@ -1,14 +1,13 @@
 // sesi Admin
-import { useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
-import { Header } from '@/components/layout/header';
-import Sidebar from '@/components/layout/sidebar';
+import { useAppSelector } from '@/app/stores/stores';
 import Navbar from '@/components/layout/navbar';
+import Sidebar from '@/components/layout/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@radix-ui/react-separator';
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { Socket, io } from 'socket.io-client';
 import { NavIcons } from '../dashboard/page';
-import { useAppSelector } from '@/app/stores/stores';
 
 // Define the type for a message
 type Message = {
@@ -52,11 +51,11 @@ export default function ComplaisnPage() {
     };
   }, []);
 
-  const handleSwitchRoom = (targetUserId: string) => {
-    if (socket) {
-      socket.emit('switchRoom', targetUserId);
-    }
-  };
+  // const handleSwitchRoom = (targetUserId: string) => {
+  //   if (socket) {
+  //     socket.emit('switchRoom', targetUserId);
+  //   }
+  // };
 
   const handleSendMessage = () => {
     if (socket && input.trim()) {

@@ -1,7 +1,6 @@
 // src/utils/cloudinary.ts
 import { ProductImageDTO } from '@src/dto/product.dto';
 import { v2 as cloudinary } from 'cloudinary';
-import { url } from 'inspector';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

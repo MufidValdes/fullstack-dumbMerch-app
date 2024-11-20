@@ -3,7 +3,6 @@ import { LoginSchema } from '@/features/auth/login/schema/loginSchema';
 import { RegisterSchema } from '@/features/auth/register/schema/registerSchema';
 import { Iuser } from '@/types/users';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 export const RegisterAsync = createAsyncThunk<void, RegisterSchema>(
