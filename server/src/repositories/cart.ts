@@ -1,7 +1,7 @@
 // src/services/cart.service.ts
 
-import { AddToCartDTO, UpdateCartItemDTO } from '@src/dto/cart.dto';
-import prisma from '@src/utils/prisma.client';
+import { AddToCartDTO, UpdateCartItemDTO } from '../dto/cart.dto';
+import prisma from '../utils/prisma.client';
 
 export async function getCartByUserId(userId: number) {
   return await prisma.cart.findUnique({

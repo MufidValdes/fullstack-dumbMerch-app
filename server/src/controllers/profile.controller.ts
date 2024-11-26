@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import * as profileService from '@services/profile.service';
-import { ProfileDTO } from '@src/dto/profile.dto';
-import { uploadSingle } from '@src/utils/cloudinary';
+import * as profileService from '../services/profile.service';
+import { ProfileDTO } from '../dto/profile.dto';
+import { uploadSingle } from '../utils/cloudinary';
 
 export const getProfile = async (req: Request, res: Response) => {
   // #swagger.tags = ['PROFILE']

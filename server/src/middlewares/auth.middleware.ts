@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import prisma from '@utils/prisma.client';
+import prisma from '../utils/prisma.client';
 import { Role } from '@prisma/client';
 
 export async function authentication(

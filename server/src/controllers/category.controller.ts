@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import * as categoryService from '@services/category.service';
-import { CategoryDTO } from '@dto/category.dto';
+import * as categoryService from '../services/category.service';
+import { CategoryDTO } from '../dto/category.dto';
 
 export const addCategory = async (req: Request, res: Response) => {
   // #swagger.tags = ['Category']

@@ -1,8 +1,8 @@
-import { LoginDTO, RegisterDTO } from '@dto/auth.dto';
+import { LoginDTO, RegisterDTO } from '../dto/auth.dto';
 import { Request, Response } from 'express';
-import * as authService from '@services/auth.service';
-import { deleteOldTokens } from '@repositories/token';
-import prisma from '@src/utils/prisma.client';
+import * as authService from '../services/auth.service';
+import { deleteOldTokens } from '../repositories/token';
+import prisma from '../utils/prisma.client';
 
 export async function register(req: Request, res: Response) {
   // #swagger.tags = ['AUTH']

@@ -3,8 +3,8 @@ import {
   ShippingDetailsDTO,
   UpdateOrderStatusDTO,
   UpdatePaymentStatusDTO,
-} from '@src/dto/order.dto';
-import prisma from '@utils/prisma.client';
+} from '../dto/order.dto';
+import prisma from '../utils/prisma.client';
 
 export async function getUserOrders(userId: number) {
   return prisma.orders.findMany({

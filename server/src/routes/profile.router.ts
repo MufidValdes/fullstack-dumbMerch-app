@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import * as profileController from '@controllers/profile.controller';
-import { authentication } from '@src/middlewares/auth.middleware';
-import upload from '@src/middlewares/uploadFile';
+import * as profileController from '../controllers/profile.controller';
+import { authentication } from '../middlewares/auth.middleware';
+import upload from '../middlewares/uploadFile';
 
 const ProfileRouter = Router();
 /**

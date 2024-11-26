@@ -1,7 +1,7 @@
-import { authentication } from '@src/middlewares/auth.middleware';
-import * as productController from '@controllers/product.controller';
+import { authentication } from '../middlewares/auth.middleware';
+import * as productController from '../controllers/product.controller';
 import { Router } from 'express';
-import upload from '@src/middlewares/uploadFile';
+import upload from '../middlewares/uploadFile';
 
 const ProductRouter = Router();
 

@@ -1,6 +1,6 @@
 // chat.service.ts
 
-import prisma from '@src/utils/prisma.client';
+import prisma from '../utils/prisma.client';
 
 const chatService = {
   async getActiveUsers() {

@@ -1,8 +1,8 @@
 // src/controllers/payment.controller.ts
 
 import { Request, Response } from 'express';
-import * as paymentService from '@services/payment.service';
-import { CreatePaymentDTO } from '@dto/payment.dto';
+import * as paymentService from '../services/payment.service';
+import { CreatePaymentDTO } from '../dto/payment.dto';
 
 export async function createPayment(req: Request, res: Response) {
   try {

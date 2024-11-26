@@ -1,13 +1,13 @@
 // get
 // create
 import { Request, Response } from 'express';
-import * as productService from '@services/product.service';
+import * as productService from '../services/product.service';
 import {
   CreateReviewDTO,
   ProductDTO,
   UpdateProductDTO,
-} from '@src/dto/product.dto';
-import { uploadImage } from '@src/utils/cloudinary';
+} from '../dto/product.dto';
+import { uploadImage } from '../utils/cloudinary';
 
 export const getProductById = async (req: Request, res: Response) => {
   try {

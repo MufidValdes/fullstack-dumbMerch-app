@@ -3,8 +3,8 @@ import {
   ProductDTO,
   ProductImageDTO,
   UpdateProductDTO,
-} from '@src/dto/product.dto';
-import prisma from '@utils/prisma.client';
+} from '../dto/product.dto';
+import prisma from '../utils/prisma.client';
 
 // Membuat kategori baru
 export const createProduct = async (data: ProductDTO) => {

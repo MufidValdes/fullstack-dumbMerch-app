@@ -1,5 +1,5 @@
 // src/utils/cloudinary.ts
-import { ProductImageDTO } from '@src/dto/product.dto';
+import { ProductImageDTO } from '../dto/product.dto';
 import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({

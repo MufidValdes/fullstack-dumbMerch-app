@@ -1,4 +1,4 @@
-import * as reviewRepository from '@repositories/review';
+import * as reviewRepository from '../repositories/review';
 
 export async function addReview(
   userId: number,

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as reviewService from '@services/review.service';
+import * as reviewService from '../services/review.service';
 
 export async function addReview(req: Request, res: Response) {
   // #swagger.tags = ['REVIEW']

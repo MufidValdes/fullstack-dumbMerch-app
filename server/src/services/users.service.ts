@@ -1,5 +1,5 @@
 import { Gender, Role } from '@prisma/client';
-import * as usersRepository from '@repositories/users';
+import * as usersRepository from '../repositories/users';
 // / {admin only}
 // getallusers
 export const getAllUsers = async () => {

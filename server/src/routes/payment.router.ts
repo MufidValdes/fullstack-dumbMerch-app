@@ -1,8 +1,8 @@
 // src/routes/payment.router.ts
 
 import { Router } from 'express';
-import * as paymentController from '@controllers/payment.controller';
-import { authentication, authorize } from '@middlewares/auth.middleware';
+import * as paymentController from '../controllers/payment.controller';
+import { authentication, authorize } from '../middlewares/auth.middleware';
 
 const PaymentRouter = Router();
 
