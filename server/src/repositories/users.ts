@@ -1,6 +1,6 @@
-import { RegisterDTO } from '@dto/auth.dto';
+import { RegisterDTO } from '../dto/auth.dto';
 import { Gender, Role } from '@prisma/client';
-import prisma from '@utils/prisma.client';
+import prisma from '../utils/prisma.client';
 
 export const createUser = async (IRegister: RegisterDTO) => {
   return prisma.users.create({

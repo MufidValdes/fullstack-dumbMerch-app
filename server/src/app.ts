@@ -1,5 +1,5 @@
-import Authrouter from '@routes/auth.router';
-import swaggerFile from '@utils/swagger-output.json';
+import Authrouter from './routes/auth.router';
+import swaggerFile from './utils/swagger-output.json';
 import cors from 'cors';
 import express, { Express } from 'express';
 import swaggerUi from 'swagger-ui-express';

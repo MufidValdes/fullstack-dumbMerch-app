@@ -1,5 +1,5 @@
-import prisma from '@utils/prisma.client';
-import { CategoryDTO } from '@dto/category.dto';
+import prisma from '../utils/prisma.client';
+import { CategoryDTO } from '../dto/category.dto';
 
 // Membuat kategori baru
 export const createCategory = async (data: CategoryDTO) => {

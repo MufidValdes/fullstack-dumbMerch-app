@@ -1,5 +1,5 @@
 // chatHandler.ts
-import chatService from '@src/services/chat.service';
+import chatService from '../services/chat.service';
 import { Socket, Server } from 'socket.io';
 import { Role } from '@prisma/client';
 

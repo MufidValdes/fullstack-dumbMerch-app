@@ -1,5 +1,5 @@
-import * as categoryRepository from '@repositories/category';
-import { CategoryDTO } from '@dto/category.dto';
+import * as categoryRepository from '../repositories/category';
+import { CategoryDTO } from '../dto/category.dto';
 
 export const createCategory = async (data: CategoryDTO) => {
   return categoryRepository.createCategory(data);

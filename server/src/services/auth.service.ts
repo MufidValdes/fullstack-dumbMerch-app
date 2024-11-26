@@ -1,8 +1,8 @@
-import { LoginDTO, RegisterDTO } from '@dto/auth.dto';
-import * as userRepository from '@repositories/users';
-import { comparePassword, hashPassword } from '@utils/encryption';
+import { LoginDTO, RegisterDTO } from '../dto/auth.dto';
+import * as userRepository from '../repositories/users';
+import { comparePassword, hashPassword } from '../utils/encryption';
 import jwt from 'jsonwebtoken';
-import { saveToken, deleteOldTokens } from '@repositories/token';
+import { saveToken, deleteOldTokens } from '../repositories/token';
 
 export const register = async (IRegister: RegisterDTO) => {
   const existedUser = await userRepository.findUsernameOrEmail(IRegister.email);

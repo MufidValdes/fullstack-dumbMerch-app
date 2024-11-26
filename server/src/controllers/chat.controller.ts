@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import chatService from '@src/services/chat.service';
+import chatService from '../services/chat.service';
 
 class ChatController {
   async createRoom(req: Request, res: Response) {

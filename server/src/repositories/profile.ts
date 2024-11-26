@@ -1,5 +1,5 @@
-import prisma from '@utils/prisma.client';
-import { ProfileDTO } from '@dto/profile.dto';
+import prisma from '../utils/prisma.client';
+import { ProfileDTO } from '../dto/profile.dto';
 
 export const updateProfileByUserId = async (
   userId: number,

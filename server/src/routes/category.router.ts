@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import * as categoryController from '@controllers/category.controller';
-import { authentication, authorize } from '@src/middlewares/auth.middleware';
+import * as categoryController from '../controllers/category.controller';
+import { authentication, authorize } from '../middlewares/auth.middleware';
 import { Role } from '@prisma/client';
 
 const CategoryRouter = Router();

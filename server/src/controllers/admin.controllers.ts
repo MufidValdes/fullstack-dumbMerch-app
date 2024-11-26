@@ -1,6 +1,6 @@
 import { Gender, Role } from '@prisma/client';
 import { Request, Response } from 'express';
-import * as adminSevice from '@services/users.service';
+import * as adminSevice from '../services/users.service';
 // / {admin only}
 // getallusers
 export const getAllUsers = async (req: Request, res: Response) => {

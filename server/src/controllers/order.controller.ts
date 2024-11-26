@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import * as orderService from '@services/order.service';
+import * as orderService from '../services/order.service';
 import { PaymentStatus, OrderStatus } from '@prisma/client';
-import prisma from '@src/utils/prisma.client';
-import { ShippingDetailsDTO } from '@src/dto/order.dto';
+import prisma from '../utils/prisma.client';
+import { ShippingDetailsDTO } from '../dto/order.dto';
 
 export async function getUserOrders(req: Request, res: Response) {
   // #swagger.tags = ['Order']

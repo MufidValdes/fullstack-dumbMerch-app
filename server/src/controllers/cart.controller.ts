@@ -1,8 +1,8 @@
 // src/controllers/cart.controller.ts
 
 import { Request, Response } from 'express';
-import * as cartService from '@services/cart.service';
-import { AddToCartDTO, UpdateCartItemDTO } from '@dto/cart.dto';
+import * as cartService from '../services/cart.service';
+import { AddToCartDTO, UpdateCartItemDTO } from '../dto/cart.dto';
 
 export async function getCart(req: Request, res: Response) {
   try {

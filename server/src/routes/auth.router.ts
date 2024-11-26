@@ -1,5 +1,5 @@
-import * as authController from '@controllers/auth.controller';
-import { authentication } from '@src/middlewares/auth.middleware';
+import * as authController from '../controllers/auth.controller';
+import { authentication } from '../middlewares/auth.middleware';
 import { Router } from 'express';
 
 const Authrouter = Router();

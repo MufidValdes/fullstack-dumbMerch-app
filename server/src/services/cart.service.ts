@@ -1,8 +1,7 @@
 // src/services/cart.service.ts
 
-import { AddToCartDTO, UpdateCartItemDTO } from '@src/dto/cart.dto';
-import prisma from '@src/utils/prisma.client';
-import * as CartRepository from '@repositories/cart';
+import { AddToCartDTO, UpdateCartItemDTO } from '../dto/cart.dto';
+import * as CartRepository from '../repositories/cart';
 
 export async function getCartByUserId(userId: number) {
   return CartRepository.getCartByUserId(userId);

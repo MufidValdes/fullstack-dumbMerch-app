@@ -1,9 +1,9 @@
-import * as productRepository from '@repositories/product';
+import * as productRepository from '../repositories/product';
 import {
   CreateReviewDTO,
   ProductDTO,
   UpdateProductDTO,
-} from '@src/dto/product.dto';
+} from '../dto/product.dto';
 
 export const getProductById = async (id: number) => {
   return productRepository.getProductById(id);

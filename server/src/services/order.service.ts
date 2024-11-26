@@ -1,9 +1,9 @@
-import * as orderRepository from '@repositories/order';
+import * as orderRepository from '../repositories/order';
 import {
   ShippingDetailsDTO,
   UpdateOrderStatusDTO,
   UpdatePaymentStatusDTO,
-} from '@src/dto/order.dto';
+} from '../dto/order.dto';
 
 export async function getUserOrders(userId: number) {
   return orderRepository.getUserOrders(userId);

@@ -1,8 +1,8 @@
 // src/services/payment.service.ts
 
-import prisma from '@utils/prisma.client';
-import snap from '@utils/midtrans';
-import { CreatePaymentDTO } from '@dto/payment.dto';
+import prisma from '../utils/prisma.client';
+import snap from '../utils/midtrans';
+import { CreatePaymentDTO } from '../dto/payment.dto';
 import { PaymentStatus } from '@prisma/client';
 
 export async function createPayment(data: CreatePaymentDTO) {

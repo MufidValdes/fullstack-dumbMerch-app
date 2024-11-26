@@ -1,4 +1,4 @@
-import prisma from '@utils/prisma.client';
+import prisma from '../utils/prisma.client';
 import { TokenType } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 
