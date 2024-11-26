@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -r tsconfig-paths/register index.ts",
-    "build": "prisma generate && npx tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "build": "prisma generate && npx tsc",
     "start": "node ./dist",
     "swagger": "ts-node ./src/utils/swaggerDoc.ts",
     "test": "ts-mocha -r ts-node/register ./src/test/**/*.test.ts",
