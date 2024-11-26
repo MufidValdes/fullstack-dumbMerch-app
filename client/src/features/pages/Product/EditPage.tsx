@@ -56,7 +56,7 @@ const ProductEditPage = () => {
       formData.append('stock', product.stock.toString());
 
       // Tambahkan gambar baru
-      uploadedImages.forEach((image: any, index) => {
+      uploadedImages.forEach((image: any) => {
         if (image.file) {
           formData.append(`images`, image.file);
         }
