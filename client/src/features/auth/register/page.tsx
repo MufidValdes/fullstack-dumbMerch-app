@@ -34,7 +34,7 @@ export default function RegisterPage() {
         <div className="flex items-center gap-2 mb-10">
           <img
             className="size-[184px]"
-            src="./src/assets/logo.svg"
+            src="https://res.cloudinary.com/dje40bx3b/image/upload/v1732637144/ecommerce_products/kxsnud5johi1cjtn2nso.png"
             alt=""
           />
         </div>

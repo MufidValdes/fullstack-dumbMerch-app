@@ -24,7 +24,7 @@ export const TransactionCard = ({ transaction }: { transaction: any }) => (
         </p>
       </CardFooter>
       {/* <img
-        src="./src/assets/images/logo-dumbmerch.png"
+        src="https://res.cloudinary.com/dje40bx3b/image/upload/v1732637144/ecommerce_products/kxsnud5johi1cjtn2nso.png"
         alt="Dumb Merch"
         className="object-contain h-[50px]"
       /> */}

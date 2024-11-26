@@ -8,7 +8,7 @@ function Navbar() {
     <div className="flex justify-between items-center mb-8">
       <div className="flex gap-1.5 justify-center items-center">
         <img
-          src="./src/assets/images/logo-dumbmerch.png"
+          src="https://res.cloudinary.com/dje40bx3b/image/upload/v1732637144/ecommerce_products/kxsnud5johi1cjtn2nso.png"
           alt="Logo"
           className="w-[40px] h-[40px] object-contain"
         />

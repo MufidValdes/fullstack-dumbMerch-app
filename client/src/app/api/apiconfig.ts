@@ -1,6 +1,8 @@
 import axios from 'axios';
+const port = import.meta.env.PORT || 3000;
+const API_URL = import.meta.env.VITE_API || `http://localhost:${port}`;
 export const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: `${API_URL}/api`,
 });
 
 api.interceptors.request.use((config) => {
